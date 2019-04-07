@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html ng-app="ListeaFaire">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Liste Choses à Faire</title>
+        <!-- <script src="angular.min.js"></script> -->
+        
+        <!-- Angular Material style sheet -->
+        <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.12/angular-material.min.css">
+
+        <!-- Angular Material requires Angular.js Libraries -->
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-animate.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-aria.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-messages.min.js"></script>
+        
+        <!-- Angular Material Library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.12/angular-material.min.js"></script>
+
+        <script src="index.js"></script>
+        <link rel="stylesheet" href="bootstrap.min.css">
+    </head>
+    <body ng-controller="mainController">
+        <h1>La liste des choses à faire</h1>
+        <div id="todo-form">
+            <form>
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="écrire quelque chose" ng-model="formData.name">
+                    <md-button class="md-primary md-raised" type="submit" ng-click="createTodo()">Ajouter</md-button>
+                </div>
+            </form>
+        </div>
+        <br /> Nombre de task: {{ laliste.length }}
+        <div id="todo-list">
+            <!-- <button ng-click="removeSelectedTask()">Supprimer</button>
+            <button ng-click="selectAll()">Selectionner tout</button> -->
+
+
+            <div ng-repeat="x in laliste">
+                <h5>
+                    
+                    <div ng-if="myvar == x._id">
+                        <input type="text" class="form-control" placeholder="écrire quelque chose"
+                        ng-model="formDataModif.name">
+                        <md-button class="md-primary md-raised" ng-click="modifTodo(x._id)">
+                            Valider
+                        </md-button>
+                        <md-button class="md-primary md-raised" ng-click="annulerModification()">
+                            Annuler
+                        </md-button>
+                    </div>
+                    
+                    <div ng-if="myvar != x._id">
+                        <md-checkbox ng-click="changeCheck(x)" ng-checked="x.done">
+                        <span ng-style="{ 'text-decoration' : (x.done == false) ? 'blink' : 'line-through' }">
+                            {{ x.name }}
+                            M[{{ x.date | date:'yyyy-MM-dd à hh:mm:ss'}}]
+                            C[{{ x.dateCheck | date:'yyyy-MM-dd à hh:mm:ss'}}]
+                        </span>
+                        <md-button class="md-primary md-raised" ng-click="modifier(x)">
+                            Modifier
+                        </md-button>
+                        <md-button class="md-raised" ng-click="deleteTodo(x._id)">Supprimer</md-button>
+                    </div>
+                    <!-- <button ng-click="modifTodo(x._id)">Modifier</button> -->
+                </h5>
+            </div>
+        </div>
+
+    </body>
+</html>
