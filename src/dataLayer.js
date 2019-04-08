@@ -16,8 +16,9 @@ var dataLayer = {
         });
     },
 
-    getTaskSet : function (cb) {
-        db.collection("Tasks").find({}).toArray(function (err, docs) {
+    getTaskSet: function (taskGroup,cb) {
+        console.log(taskGroup);
+        db.collection("Tasks").find({ "taskGroup" : taskGroup}).toArray(function (err, docs) {
             cb(docs);
         });
     },
@@ -32,6 +33,7 @@ var dataLayer = {
         var query = { _id: new mongodb.ObjectID(task._id) };
         var data = {
             $set:{
+                taskGroup: task.taskGroup,
                 name: task.name,
                 date: task.date,
                 dateCheck: task.dateCheck,
@@ -46,6 +48,39 @@ var dataLayer = {
     deleteTask: function (task, cb) {
         var query = { _id: new mongodb.ObjectID(task._id) };
         db.collection("Tasks").deleteOne(query, function (err, result) {
+            cb();
+        });
+    },
+
+
+    //GroupTask-------------------------------------------
+    getTasksGroup: function (cb) {
+        db.collection("TasksGroup").find({}).toArray(function (err, docs) {
+            cb(docs);
+        });
+    },
+
+    insertTasksGroup: function (task, cb) {
+        db.collection("TasksGroup").insertOne(task, function (err, result) {
+            cb();
+        });
+    },
+
+    updateTasksGroup: function (task, cb) {
+        var query = { _id: new mongodb.ObjectID(task._id) };
+        var data = {
+            $set: {
+                name: task.name
+            }
+        };
+        db.collection("TasksGroup").updateOne(query, data, function (err, result) {
+            cb();
+        });
+    },
+
+    deleteTasksGroup: function (task, cb) {
+        var query = { _id: new mongodb.ObjectID(task._id) };
+        db.collection("TasksGroup").deleteOne(query, function (err, result) {
             cb();
         });
     }
