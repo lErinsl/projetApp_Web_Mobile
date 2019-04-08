@@ -28,18 +28,11 @@ var dataLayer = {
         });
     },
 
-    updateTask: function (task, cb) {
-        var query = { _id: new mongodb.ObjectID(task._id) };
-        var data = {
-            $set:{
-                taskGroup: task.taskGroup,
-                name: task.name,
-                date: task.date,
-                dateCheck: task.dateCheck,
-                done: task.done
-            }
-        };
-        db.collection("Tasks").updateOne(query, data, function (err, result) {
+    update: function (collection,data, cb) {
+        var query = { _id: new mongodb.ObjectID(data._id) };
+        console.log("datalayer");
+        console.log(data);
+        db.collection(collection).updateOne(query, {$set: data}, function (err, result) {
             cb();
         });
     },
