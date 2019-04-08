@@ -10,7 +10,6 @@ var dataLayer = {
         //Initialize connection once
         client.connect(function (err) {
             if(err) throw err;
-
             db = client.db("Poly");
             cb();
         });

@@ -10,19 +10,12 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
 
     $scope.myvar = {};
 
-    $http.post('/getTaskSet/' + null).then(function (data) {
+    /*$http.post('/getTaskSet/' + null).then(function (data) {
             $scope.laliste = data.data;
             console.log(data.data);
     }).catch(function (response) {
         console.error('Error', response);
-    });
-
-    $http.post('/getTasksGroup/').then(function (data) {
-        $scope.projectliste = data.data;
-        console.log(data.data);
-    }).catch(function (response) {
-        console.error('Error', response);
-    });
+    });*/
 
     $scope.toggleLeft = buildToggler('left');
     function buildToggler(componentId) {
@@ -30,9 +23,39 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
             $mdSidenav(componentId).toggle();
         };
     }
-  
+
+    var refreshGlobal = function () {
+        $http.post('/getTasksGroup/').then(function (data) {
+            $scope.projectliste = data.data;
+            console.log(data.data);
+
+            //On met un projet par default si il existe pas:
+            console.log($scope.projectliste.length);
+            if ($scope.projectliste.length == 0) {
+                $scope.newProject();
+                $scope.TasksGroupSelect = $scope.projectliste[0];
+            } else {
+                // si il y a 1 projet ou plus, on le selectionne directement.
+                $scope.TasksGroupSelect = $scope.projectliste[0];
+                refreshTask($scope.TasksGroupSelect);
+            }
+        }).catch(function (response) {
+            console.error('Error', response);
+        });
+    }
+
+    refreshGlobal();
+
     //--------------------------------------------------------------------------
 //Project:
+    refreshProject = function () {
+        $http.post('/getTasksGroup').then(function (data) {
+            $scope.projectliste = data.data;
+        }).catch(function (response) {
+            console.error('Error', response);
+        });
+    }
+
     $scope.selectProject = function (project) {
         $scope.TasksGroupSelect = project;
         refreshTask(project);
@@ -41,7 +64,7 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
 
     $scope.newProject = function () {
         console.log($scope.formTaskGroup);
-        $scope.formTaskGroup.name = "Project";
+        $scope.formTaskGroup.name = "Project "+$scope.projectliste.length;
 
         $http.post('/addTasksGroup', $scope.formTaskGroup)
             .then(function (data) {
@@ -49,11 +72,7 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
                 console.log(data);
 
                 //on réactualise les données
-                $http.post('/getTasksGroup').then(function (data) {
-                    $scope.projectliste = data.data;
-                }).catch(function (response) {
-                    console.error('Error', response);
-                });
+                refreshProject();
             })
             .catch(function (data) {
                 console.log("Error:" + data);
@@ -66,11 +85,11 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
                 console.log(data);
 
                 //on réactualise les données
-                $http.post('/getTasksGroup').then(function (data) {
-                    $scope.projectliste = data.data;
-                }).catch(function (response) {
-                    console.error('Error', response);
-                });
+                if (id == $scope.TasksGroupSelect._id){
+                    refreshGlobal();
+                }else{
+                    refreshProject();
+                }
             })
             .catch(function (data) {
                 console.log("Error:" + data);
@@ -170,5 +189,20 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
                 console.log("Error:" + data);
             });
     };
+
+
+    $scope.name = 'Yuval';
+    $scope.showVal = function () { alert($scope.name); };
+    $scope.onValueChanged = function (val, done) {
+        $timeout(function () {
+            var err = Math.random() > 0.5 ? new Error() : null; // Lets fail somtimes
+            done(err);
+        }, 1000);
+    }
+    
+    function EditLabelController() {
+        this.mode = EditLabelController.Modes.View;
+        this.originalValue = '';
+    }
 
 });

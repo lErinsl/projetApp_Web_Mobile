@@ -20,6 +20,7 @@
 
         <script src="index.js"></script>
         <link rel="stylesheet" href="bootstrap.min.css">
+        <link rel="stylesheet" href="./style.css">
     </head>
     <body ng-controller="mainController" layout="column">
 
@@ -29,8 +30,12 @@
                     Toggle Sidenav
                 </md-button>
         
-                <h2 flex md-truncate>ToDo Liste : {{TasksGroupSelect.name}}</h2>
+                <h2 flex md-truncate>ToDo Liste : <span ng-click="">{{TasksGroupSelect.name}}</span></h2>
 
+                <label>Name:</label>
+                <edit-label value="name" type="text" value-changed="onValueChanged(value, done)">
+                    <div></div>
+                </edit-label>
             </div>
         </md-toolbar>
 
