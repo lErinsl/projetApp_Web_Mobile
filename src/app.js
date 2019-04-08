@@ -33,3 +33,8 @@ TasksRouter.routesConfigs(app,dataLayer);
 //Project:
 const TaskGroupRouter = require('./taskGroup-route.config.js');
 TaskGroupRouter.routesConfigs(app,dataLayer);
+
+//----------------------------------------------------------------------------
+//Users:
+const UsersRouter = require('./users-route.config.js');
+UsersRouter.usersConfigs(app,dataLayer);
