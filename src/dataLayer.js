@@ -15,67 +15,42 @@ var dataLayer = {
         });
     },
 
-    getTaskSet: function (taskGroup,cb) {
-        console.log(taskGroup);
-        db.collection("Tasks").find({ "taskGroup" : taskGroup}).toArray(function (err, docs) {
-            cb(docs);
-        });
-    },
-
-    insertTask : function (task, cb) {
-        db.collection("Tasks").insertOne(task, function (err, result) {
-            cb();
-        });
-    },
-
-    update: function (collection,data, cb) {
-        var query = { _id: new mongodb.ObjectID(data._id) };
-        console.log("datalayer");
-        console.log(data);
-        db.collection(collection).updateOne(query, {$set: data}, function (err, result) {
-            cb();
-        });
-    },
-
-    deleteTask: function (task, cb) {
-        var query = { _id: new mongodb.ObjectID(task._id) };
-        db.collection("Tasks").deleteOne(query, function (err, result) {
-            cb();
-        });
-    },
-
-
-    //GroupTask-------------------------------------------
-    getTasksGroup: function (cb) {
-        db.collection("TasksGroup").find({}).toArray(function (err, docs) {
-            cb(docs);
-        });
-    },
-
-    insertTasksGroup: function (task, cb) {
-        db.collection("TasksGroup").insertOne(task, function (err, result) {
-            cb();
-        });
-    },
-
-    updateTasksGroup: function (task, cb) {
-        var query = { _id: new mongodb.ObjectID(task._id) };
-        var data = {
-            $set: {
-                name: task.name
+    get: function (collection, filter,cb) {
+        console.log(filter);
+        if(filter._id != null){
+            filter = {
+                _id: new mongodb.ObjectID(filter._id)
             }
-        };
-        db.collection("TasksGroup").updateOne(query, data, function (err, result) {
+        }
+        db.collection(collection).find(filter).toArray(function (err, docs) {
+            cb(docs);
+        });
+    },
+
+    insert: function (collection,data, cb) {
+        db.collection(collection).insertOne(data, function (err, result) {
             cb();
         });
     },
 
-    deleteTasksGroup: function (task, cb) {
-        var query = { _id: new mongodb.ObjectID(task._id) };
-        db.collection("TasksGroup").deleteOne(query, function (err, result) {
+    update: function (collection,ID,task, cb) {
+        var query = { _id: new mongodb.ObjectID(ID) };
+
+        var data = {
+            $set : task
+        };
+        
+        db.collection(collection).updateOne(query,data, function (err, result) {
             cb();
         });
-    }
+    },
+
+    delete: function (collection,data, cb) {
+        var query = { _id: new mongodb.ObjectID(data._id) };
+        db.collection(collection).deleteOne(query, function (err, result) {
+            cb();
+        });
+    },
 }
 
 module.exports = dataLayer;
