@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html ng-app="TodoApp">
+<head>
+	<meta charset='utf-8'>
+	<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+	
+	<title>TaskList - Connection</title>
+	
+	<link rel='stylesheet' media='screen' href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'>
+	<link rel='stylesheet' href='./bootstrap/bootstrap.min.css'>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+
+    <link rel='stylesheet' href='./bootstrap/bootstrap-theme.css' media='screen' >
+    
+	<link rel='stylesheet' href='./css/main.css'>
+    <link rel='shortcut icon' type='image/png' href='img/favicon.png'/>
+    
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
+    <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
+    <script src='http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js'></script>
+    
+    <script src="./js/connection.js"></script>
+    <script src="./js/cookie.js"></script>
+</head>
+
+<body ng-controller=ConnectionController>
+	<div class='navbar navbar-inverse navbar-fixed-top headroom' >
+		<div class='container'>
+			<div class='navbar-header'>
+				<button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'><span class='icon-bar'></span> <span class='icon-bar'></span> <span class='icon-bar'></span> </button>
+				<a class='navbar-brand' href="./index.html"><img src='./img/favicon.png'> TaskList </a>
+			</div>
+			<div class='navbar-collapse collapse'>
+				<ul class='nav navbar-nav pull-right'>
+                    <li><a href='./index.html'>Accueil</a></li>
+                    <li><a href='#' ng-class="{'hidden': idUser!=null}">Se connecter</a></li>
+                    <li><a href='./inscription.html' ng-class="{'hidden': idUser!=null}">S'inscrire</a></li>
+                    <li><a href='./meslistes.html' ng-class="{'hidden': idUser==null}">Mes listes</a></li>
+                    <li><a href='./moncompte.html' ng-class="{'hidden': idUser==null}">Mon compte</a></li>
+                    <li><a onclick="Logout()" ng-class="{'hidden': idUser==null}">Se déconnecter</a></li>
+				</ul>
+			</div>
+		</div>
+    </div>
+    
+    <header id='head'>
+		<div class='container'>
+			<div class='row'>
+				<h1 class='lead'>Se connecter</h1>
+			</div>
+		</div>
+	</header>
+
+    <div class="container content ">
+        <div class="container col-sm-8 col-sm-offset-2">
+            <form class="form-group">
+                <div class="form-group">
+                    <label>Pseudo</label>
+                    <input type="text" placeholder="Pseudo" ng-model="formData.pseudoUser" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Mot de passe</label>
+                    <input type="password" placeholder="Mot de passe" ng-model="formData.mdpUser" class="form-control">
+                </div> 
+                <p ng-class="{'hidden': errorId==false, 'text-danger text-center': errorId==true}">Pseudo ou Mot de passe erroné</p>
+                <button type="submit" ng-click="seconnecter()" class="btn btn-primary btn-lg btn-block">Se connecter</button>
+            </form>
+            <p>Vous n'avez pas encore de compte TaskList ?<a href="inscription.html"> S'inscrit maintenant !</a></p>
+        </div>        
+    </div>
+
+    <footer class='top-space'>
+        <div>
+            <div class='container'>
+                <div class='row'>					
+                    <div class='col-md-6 widget'>
+                        <div class='widget-body'>
+                            <p class='simplenav'>
+                                <a href='./index.html'>Accueil</a> | 
+                                <a href='#' ng-class="{'hidden': idUser!=null}">Se connecter</a><span ng-class="{'hidden': idUser!=null}"> | </span>
+                                <a href='./inscription.html' ng-class="{'hidden': idUser!=null}">S'inscrire</a>
+                                <a href='./meslistes.html' ng-class="{'hidden': idUser==null}">Mes listes</a><span ng-class="{'hidden': idUser==null}"> | </span>
+                                <a href='./moncomte.html' ng-class="{'hidden': idUser==null}">Mon compte</a><span ng-class="{'hidden': idUser==null}"> | </span>
+                                <a onclick="Logout()" ng-class="{'hidden': idUser==null}">Se déconnecter</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>	
+</body>
+</html>
