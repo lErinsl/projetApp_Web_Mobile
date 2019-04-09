@@ -1,6 +1,7 @@
-var TodoApp = angular.module('TodoApp', []);
+var TodoApp = angular.module('TodoApp', ['ngMaterial']);
 
-function MonCompteController($scope, $http){
+// function MonCompteController($scope, $http){
+TodoApp.controller('MonCompteController', function ($scope, $http) {
   $scope.formData = {};
   $scope.idUser = GetCookie("idUser");
   $scope.userInfos = null;
@@ -14,7 +15,7 @@ function MonCompteController($scope, $http){
   $scope.errorMdp = false;
   $scope.errorMdpConf = false;
 
-  if ($scope.idUser==null) document.location.href="./index.html";
+  //if ($scope.idUser==null) document.location.href="./index.html";
 
   //ok
   $scope.recuperermesinfos = function(){
@@ -225,4 +226,5 @@ function MonCompteController($scope, $http){
 
     if (!$scope.errorAncienMdp && !$scope.errorMdp && !$scope.errorMdpConf) $scope.nouveauMdp();
   };
-}
+
+});

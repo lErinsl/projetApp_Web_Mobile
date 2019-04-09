@@ -1,23 +1,26 @@
 <!DOCTYPE html>
 <html ng-app="TodoApp">
 <head>
-	<meta charset='utf-8'>
-	<meta name='viewport' content='width=device-width, initial-scale=1.0'>
-	
-	<title>TaskList - Connection</title>
-	
-	<link rel='stylesheet' media='screen' href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'>
-	<link rel='stylesheet' href='./bootstrap/bootstrap.min.css'>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-
-    <link rel='stylesheet' href='./bootstrap/bootstrap-theme.css' media='screen' >
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TODO Liste</title>
+    <!-- <script src="angular.min.js"></script> -->
     
-	<link rel='stylesheet' href='./css/main.css'>
-    <link rel='shortcut icon' type='image/png' href='img/favicon.png'/>
+    <!-- Angular Material style sheet -->
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.12/angular-material.min.css">
     
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
-    <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
-    <script src='http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js'></script>
+    <!-- Angular Material requires Angular.js Libraries -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-animate.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-aria.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-messages.min.js"></script>
+    
+    <!-- Angular Material Library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.12/angular-material.min.js"></script>
+    
+    <script src="./js/index.js"></script>
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/style.css">
     
     <script src="./js/connection.js"></script>
     <script src="./js/cookie.js"></script>
@@ -68,26 +71,5 @@
             <p>Vous n'avez pas encore de compte TaskList ?<a href="inscription.html"> S'inscrit maintenant !</a></p>
         </div>        
     </div>
-
-    <footer class='top-space'>
-        <div>
-            <div class='container'>
-                <div class='row'>					
-                    <div class='col-md-6 widget'>
-                        <div class='widget-body'>
-                            <p class='simplenav'>
-                                <a href='./index.html'>Accueil</a> | 
-                                <a href='#' ng-class="{'hidden': idUser!=null}">Se connecter</a><span ng-class="{'hidden': idUser!=null}"> | </span>
-                                <a href='./inscription.html' ng-class="{'hidden': idUser!=null}">S'inscrire</a>
-                                <a href='./meslistes.html' ng-class="{'hidden': idUser==null}">Mes listes</a><span ng-class="{'hidden': idUser==null}"> | </span>
-                                <a href='./moncomte.html' ng-class="{'hidden': idUser==null}">Mon compte</a><span ng-class="{'hidden': idUser==null}"> | </span>
-                                <a onclick="Logout()" ng-class="{'hidden': idUser==null}">Se déconnecter</a>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>	
 </body>
 </html>

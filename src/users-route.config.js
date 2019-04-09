@@ -5,15 +5,15 @@ exports.usersConfigs = function (app, dataLayer) {
     //insert
     app.post("/adduser", function (req, res) {
 
+        
         if (req.body && typeof req.body.email != 'undefined'
-            && typeof req.body.pass != 'undefined'
-            && typeof req.body.nickname != 'undefined') {
-
+        && typeof req.body.pass != 'undefined'
+        && typeof req.body.nickname != 'undefined') {
+            
+            //on teste si un user exist ou non.
             console.log(req.body);
 
             var users = {
-                firstName : req.body.firstName,
-                lastName : req.body.lastName,
                 email : req.body.email,
                 nickname : req.body.nickname,
                 pass : req.body.pass
@@ -38,19 +38,23 @@ exports.usersConfigs = function (app, dataLayer) {
 
         var page = req.body.page;
 
+        var filter = {
+
+        };
+
         if (page == "connection") {
-            document.pseudoUser = req.body.pseudoUser;
-            document.mdpUser = req.body.mdpUser;
+            filter.pseudoUser = req.body.pseudoUser;
+            filter.mdpUser = req.body.mdpUser;
         }
         if (page == "inscription") {
-            if (req.body.inputInscription == "pseudo") document.pseudoUser = req.body.pseudoUser;
-            else document.emailUser = req.body.emailUser;
+            if (req.body.inputInscription == "pseudo") filter.pseudoUser = req.body.pseudoUser;
+            else filter.emailUser = req.body.emailUser;
         }
         if (page == "affichenom") {
-            document._id = req.body.idUser;
+            filter._id = req.body.idUser;
         }
         if (page == "partage") {
-            document = {
+            filter = {
                 $or: [
                     { pseudoUser: req.body.UserPartage },
                     { emailUser: req.body.UserPartage }
@@ -58,14 +62,44 @@ exports.usersConfigs = function (app, dataLayer) {
             };
         }
 
-        var filter = {
-
-        };
-
         dataLayer.get(usersCollect, filter, function (dtSet) {
             res.send(dtSet);
         });
     });
+
+    //Exist Pseudo
+    app.get("/existnickname/:nickname", function (req, res) {
+
+        var filter = {
+            "nickname" : req.params.nickname
+        };
+
+        dataLayer.get(usersCollect, filter, function (dtSet) {
+            console.log(dtSet);
+            if(dtSet == null || dtSet.length <=0){
+                res.send(false);
+            }else{
+                res.send(true);
+            }
+        });
+    });
+    //Exist Email
+    app.get("/existemail/:email", function (req, res) {
+
+        var filter = {
+            "email" : req.params.email
+        };
+
+        dataLayer.get(usersCollect, filter, function (dtSet) {
+            console.log(dtSet);
+            if (dtSet == null || dtSet.length <= 0) {
+                res.send(false);
+            } else {
+                res.send(true);
+            }
+        });
+    });
+    
 
     //update
     app.post('/updateuser/:elem_id', function (req, res) {

@@ -14,108 +14,68 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-animate.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-aria.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-messages.min.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-messages.min.js"></script> -->
+<script src="//code.angularjs.org/snapshot/angular-messages.js"></script>
 
     <!-- Angular Material Library -->
     <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.12/angular-material.min.js"></script>
 
-    <script src="./js/index.js"></script>
+    <script src="./js/inscription.js"></script>
     <link rel="stylesheet" href="./css/bootstrap.min.css">
     <link rel="stylesheet" href="./css/style.css">
 </head>
 
-<body ng-controller=InscriptionController>
-	<div class='navbar navbar-inverse navbar-fixed-top headroom' >
-		<div class='container'>
-			<div class='navbar-header'>
-				<button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'><span class='icon-bar'></span> <span class='icon-bar'></span> <span class='icon-bar'></span> </button>
-				<a class='navbar-brand' href="./index.html"><img src='./img/favicon.png'> TaskList </a>
-			</div>
-			<div class='navbar-collapse collapse'>
-				<ul class='nav navbar-nav pull-right'>
-                    <li><a href='./index.html'>Accueil</a></li>
-                    <li><a href='./connection.html' ng-class="{'hidden': idUser!=null}">Se connecter</a></li>
-                    <li><a href='#' ng-class="{'hidden': idUser!=null}">S'inscrire</a></li>
-                    <li><a href='./meslistes.html' ng-class="{'hidden': idUser==null}">Mes listes</a></li>
-                    <li><a href='./moncompte.html' ng-class="{'hidden': idUser==null}">Mon compte</a></li>
-                    <li><a onclick="Logout()" ng-class="{'hidden': idUser==null}">Se déconnecter</a></li>
-				</ul>
-			</div>
-		</div>
-    </div>
-    
-    <header id='head'>
-		<div class='container'>
-			<div class='row'>
-				<h1 class='lead'>S'inscrire'</h1>
-			</div>
-		</div>
-	</header>
-
-    <div class="container content ">
-        <div class="container col-sm-8 col-sm-offset-2">
-            <form class="form-group">
-                <div class="form-group">
-                    <label>Nom : </label>
-                    <span ng-class="{'hidden': errorNom==false, 'text-danger text-center': errorNom==true}">
-                         * Nom obligatoire
-                    </span>
-                    <input ng-class="{'border border-danger form-control': errorNom==true,
-                                   'form-control': errorNom==false}"
-                    type="text" ng-model="formData.nomUser"/>
-               
-                    <label>Prénom : </label>
-                    <span ng-class="{'hidden': errorPrenom==false, 'text-danger text-center': errorPrenom==true}">
-                         * Prénom obligatoire
-                    </span>
-                    <input ng-class="{'border border-danger form-control': errorPrenom==true,
-                                   'form-control': errorPrenom==false}"
-                    type="text" ng-model="formData.prenomUser"/>  
-               
-                    <label>Email : </label>
-                    <span ng-class="{'hidden': errorEmail!=-1, 'text-danger text-center': errorEmail==-1}">
-                         * Email déjà utilisé
-                    </span>
-                    <span ng-class="{'hidden': errorEmail!=0, 'text-danger text-center': errorEmail==0}">
-                         * Email obligatoire
-                    </span>
-                    <input  ng-class="{'border border-danger form-control': errorEmail!=1,
-                                   'form-control': errorEmail==1}"
-                    type="email" ng-model="formData.emailUser"/>                  
-                </div>
-
-                <div class="form-group">	
+<body ng-controller=InscriptionController layout="column">
+     
+    <md-content layout-padding>
+          <form name="inscriptionForm">
+               <md-input-container class="md-block">
                     <label>Pseudo : </label>
-                    <span ng-class="{'hidden': errorPseudo!=-1, 'text-danger text-center': errorPseudo==-1}">
-                         * Pseudo déjà utilisé
-                    </span>
-                    <span ng-class="{'hidden': errorPseudo!=0, 'text-danger text-center': errorPseudo==0}">
-                         * Pseudo obligatoire (5 caratères minimums)
-                    </span>
-                    <input ng-class="{'border border-danger form-control': errorPseudo!=1,
-                                   'form-control': errorPseudo==1}"
-                    type="text" ng-model="formData.pseudoUser"/>
-                         
-                    <label>Mot de passe :</label>
-                    <span ng-class="{'hidden': errorMdp==false, 'text-danger text-center': errorMdp==true}">
-                         * Utilisez 8 caractères ou plus pour votre mot de passe.
-                    </span>
-                    <input ng-class="{'border border-danger form-control': errorMdp==true,
-                                   'form-control': errorMdp==false}"
-                    type="password" ng-model="formData.mdpUser"/>
+                    <input required name="nickname" ng-model="formData.nickname" minlength="3"/>
+                    inscriptionForm.nickname.$error = {{ inscriptionForm.nickname.$error | json }}
+                    <div ng-messages="inscriptionForm.nickname.$error" role="alert">
+                         <div ng-message="required">Le pseudo est requis.</div>
+                         <div ng-message="minlength">Le pseudonyme doit possèder au moins 3 caractères</div>
+                         <div ng-message="exist">Ce pseudo est déjà utilisé</div>
+                    </div>
+               </md-input-container>
 
-                    <label>Mot de Passe (confirmation) :</label>
-                    <span ng-class="{'hidden': errorMdpConf==false, 'text-danger text-center': errorMdpConf==true}">
-                         * Les mots de passe ne correspondent pas. Veuillez réessayer.
-                    </span>
-                    <input ng-class="{'border border-danger form-control': errorMdpConf==true,
-                                   'form-control': errorMdpConf==false}"
-                    type="password" ng-model="formData.mdpconfUser"/>
-                </div>
-                    
-                <input class="btn btn-primary btn-lg btn-block" type="submit" value="S'inscrire" ng-click="sinscrire()"/>
-            </form>
-        </div>        
-    </div>
+               <md-input-container class="md-block">
+                    <label>Email : </label>
+                    <input required type="email" name="email" ng-model="formData.email" minlength="3" ng-patterne="/^.+@.+\..+$/" />
+                    inscriptionForm.email.$error = {{ inscriptionForm.email.$error | json }}
+                    <div ng-messages="inscriptionForm.email.$error" role="alert">
+                         <div ng-message="required">l'adresse email est requis.</div>
+                         <div ng-message="exist">Cette adresse email est déjà utilisée</div>
+                         <div ng-message-exp="['required', 'minlength', 'pattern']">
+                              L'adresse email doit ressembler à une adresse e-mail.
+                         </div>
+                    </div>
+               </md-input-container>
+
+               <md-input-container felx="50">
+                    <label>Mot de passe : </label>
+                    <input required name="pass" ng-model="formData.pass" minlength="8">
+                    inscriptionForm.pass.$error = {{ inscriptionForm.pass.$error | json }}
+                    <div ng-messages="inscriptionForm.pass.$error" role="alert">
+                         <div ng-message="required">Le mot de passe est requis.</div>
+                         <div ng-message="minlength">Le nombre de caractère du mot de passe doit etre supérieur à 8</div>
+                         <div ng-message="notsimilar">Le mot de passe et la confirmation doivent être identique.</div>
+                    </div>
+               </md-input-container>
+
+               <md-input-container felx="50">
+                    <label>Confirmer le mot de passe : </label>
+                    <input required name="passconf" ng-model="formData.passconf">
+                    inscriptionForm.passconf.$error = {{ inscriptionForm.passconf.$error | json }}
+                    <div ng-messages="inscriptionForm.passconf.$error" role="alert">
+                         <div ng-message="required">La confirmation du mot de passe est requis.</div>
+                         <div ng-message="notsimilar">Le mot de passe et la confirmation doivent être identique.</div>
+                    </div>
+               </md-input-container>
+
+               <md-button class="md-primary md-raised" type="submit" ng-click="sinscrire(inscriptionForm)">S'inscrire</md-button>
+          </form>
+    </md-content>        
 </body>
 </html>
