@@ -36,31 +36,9 @@ exports.usersConfigs = function (app, dataLayer) {
     //get users
     app.post("/getusers", function (req, res) {
 
-        var page = req.body.page;
-
         var filter = {
 
         };
-
-        if (page == "connection") {
-            filter.pseudoUser = req.body.pseudoUser;
-            filter.mdpUser = req.body.mdpUser;
-        }
-        if (page == "inscription") {
-            if (req.body.inputInscription == "pseudo") filter.pseudoUser = req.body.pseudoUser;
-            else filter.emailUser = req.body.emailUser;
-        }
-        if (page == "affichenom") {
-            filter._id = req.body.idUser;
-        }
-        if (page == "partage") {
-            filter = {
-                $or: [
-                    { pseudoUser: req.body.UserPartage },
-                    { emailUser: req.body.UserPartage }
-                ]
-            };
-        }
 
         dataLayer.get(usersCollect, filter, function (dtSet) {
             res.send(dtSet);

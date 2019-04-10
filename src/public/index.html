@@ -87,12 +87,24 @@
                         </md-button>
                     </div>
 
+                    <input type="text" class="form-control" placeholder="Partager le projet avec un utilisateur" ng-model="TasksGroupSelect.nicknameOrEmail">
+                    <div ng-repeat="nickname in TasksGroupSelect.listviewer">
+                        {{nickname}}
+                        <md-button class="md-raised" ng-click="partageProjectRemoveUser(nickname,TasksGroupSelect)">Supprimer</md-button>
+                    </div>
+                    <div ng-if="partageError == 400 || partageError == 304" class="alert alert-warning" role="alert">
+                        {{msgPartageError}}
+                    </div>
+                    <div ng-if="partageError == 401" class="alert alert-danger" role="alert">
+                        {{msgPartageError}}
+                    </div>
+                    <md-button class="md-primary md-raised" ng-click="partageProject()">
+                        Partager
+                    </md-button>
+
                     <br /> Nombre de task: {{ laliste.length }}
                     <div id="todo-list">
-                        <!-- <button ng-click="removeSelectedTask()">Supprimer</button>
-                                <button ng-click="selectAll()">Selectionner tout</button> -->
-                    
-                    
+
                         <div ng-repeat="x in laliste">
                             <h5>
                     

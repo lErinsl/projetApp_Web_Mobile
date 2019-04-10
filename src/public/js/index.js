@@ -58,6 +58,14 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
             }
         }).catch(function (response) {
             console.error('Error', response);
+            switch (response.status) {
+                case 403:
+                    $scope.logout();
+                    break;
+
+                default:
+                    break;
+            }
         });
     }
 
@@ -70,6 +78,14 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
             $scope.projectliste = data.data;
         }).catch(function (response) {
             console.error('Error', response);
+            switch (response.status) {
+                case 403:
+                    $scope.logout();
+                    break;
+
+                default:
+                    break;
+            }
         });
     }
 
@@ -93,6 +109,14 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
             })
             .catch(function (data) {
                 console.log("Error:" + data);
+                switch (data.status) {
+                    case 403:
+                        $scope.logout();
+                        break;
+
+                    default:
+                        break;
+                }
             });
     }
 
@@ -110,9 +134,91 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
             })
             .catch(function (data) {
                 console.log("Error:" + data);
+                switch (data.status) {
+                    case 403:
+                        $scope.logout();
+                        break;
+
+                    default:
+                        break;
+                }
             });
     };
 
+//PARTAGE---------------------------------------------------------------------
+    $scope.partageProject = function () {
+        $http.post('/partageProjet/' + $scope.TasksGroupSelect._id, $scope.TasksGroupSelect, httpOptions) // retourne la liste des viewvers de ce projet apres l'avoir partagée
+            .then(function (data) {
+                console.log(data);
+
+                //on ajoute les données manquantesles données
+                console.log(data.data.listviewer);
+                if(data.status == 200){
+                    $scope.TasksGroupSelect.listviewer = data.data.listviewer;
+                    console.log($scope.TasksGroupSelect);
+                }
+            })
+            .catch(function (data) {
+                console.log("Error:" + data);
+                console.log(data);
+                switch (data.status) {
+                    case 403:
+                        $scope.logout();
+                        break;
+                    case 400:
+                        $scope.partageError = 400;
+                        $scope.msgPartageError = "Le pseudo ou l'email entrée n'existe pas.";
+                        break;
+                    case 304:
+                        $scope.partageError = 304;
+                        $scope.msgPartageError = "La Todo liste est déjà partagé avec cette utilisateur.";
+                        break;
+                    case 401:
+                        $scope.partageError = 401;
+                        $scope.msgPartageError = "Vous n'etes pas autoriser à vous rajouter vous-même !!!";
+                        break;
+                    default:
+                        break;
+                }
+            });
+    };
+
+    $scope.partageProjectRemoveUser = function (nickname) {
+        $http.post('/partageProjet/remove/' + nickname, $scope.TasksGroupSelect, httpOptions) // retourne la liste des viewvers de ce projet apres l'avoir partagée
+            .then(function (data) {
+                console.log(data);
+
+                //on ajoute les données manquantesles données
+                console.log(data.data.listviewer);
+                if (data.status == 200) {
+                    $scope.TasksGroupSelect.listviewer = data.data.listviewer;
+                    console.log($scope.TasksGroupSelect);
+                }
+            })
+            .catch(function (data) {
+                console.log("Error:" + data);
+                console.log(data);
+                switch (data.status) {
+                    case 403:
+                        $scope.logout();
+                        break;
+                    case 400:
+                        $scope.partageError = 400;
+                        $scope.msgPartageError = "Le pseudo ou l'email entrée n'existe pas.";
+                        break;
+                    case 304:
+                        $scope.partageError = 304;
+                        $scope.msgPartageError = "La Todo liste est déjà partagé avec cette utilisateur.";
+                        break;
+                    case 401:
+                        $scope.partageError = 401;
+                        $scope.msgPartageError = "Seul le createur de la liste peut retirer un membre de la liste.";
+                        break;
+                    default:
+                        break;
+                }
+            });
+    };
 
     //------------------------------------------------------------------------------------
 //TASK
@@ -121,6 +227,14 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
             $scope.laliste = data.data;
         }).catch(function (response) {
             console.error('Error', response);
+            switch (response.status) {
+                case 403:
+                    $scope.logout();
+                    break;
+
+                default:
+                    break;
+            }
         });
     }
 
@@ -143,6 +257,14 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
         })
         .catch(function (data) {
             console.log("Error:" + data);
+            switch (data.status) {
+                case 403:
+                    $scope.logout();
+                    break;
+
+                default:
+                    break;
+            }
         });
     };
 
@@ -157,6 +279,14 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
             })
             .catch(function (data) {
                 console.log("Error:" + data);
+                switch (data.status) {
+                    case 403:
+                        $scope.logout();
+                        break;
+
+                    default:
+                        break;
+                }
             });
     };
 
@@ -189,6 +319,14 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
             })
             .catch(function (data) {
                 console.log("Error:" + data);
+                switch (data.status) {
+                    case 403:
+                        $scope.logout();
+                        break;
+
+                    default:
+                        break;
+                }
             });
     };
 
@@ -204,7 +342,14 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
             })
             .catch(function (data) {
                 console.log("Error:" + data);
+                switch (data.status) {
+                    case 403:
+                        $scope.logout();
+                        break;
+
+                    default:
+                        break;
+                }
             });
     };
-
 });
