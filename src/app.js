@@ -28,20 +28,20 @@ dataLayer.init(function () {
 // page web :
 //----------------------------------------------------------------------------
 //Authentification:
-const AuthRouter = require('./authentification-route.config.js');
+const AuthRouter = require('./route/authentification-route.config.js');
 AuthRouter.authentificationConfigs(app, dataLayer,jwt);
 
 //----------------------------------------------------------------------------
 //Task
-const TasksRouter = require('./task-route.config.js');
+const TasksRouter = require('./route/task-route.config.js');
 TasksRouter.routesConfigs(app,dataLayer);
 
 //----------------------------------------------------------------------------
 //Project:
-const TaskGroupRouter = require('./taskGroup-route.config.js');
-TaskGroupRouter.routesConfigs(app,dataLayer);
+const TaskGroupRouter = require('./route/taskGroup-route.config.js');
+TaskGroupRouter.routesConfigs(app,dataLayer,jwt);
 
 //----------------------------------------------------------------------------
 //Users:
-const UsersRouter = require('./users-route.config.js');
+const UsersRouter = require('./route/users-route.config.js');
 UsersRouter.usersConfigs(app,dataLayer);

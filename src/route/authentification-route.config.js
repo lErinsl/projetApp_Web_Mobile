@@ -70,7 +70,7 @@ exports.authentificationConfigs = function (app, dataLayer, jwt) {
         });
     });
     // FORMAT OF TOKEN
-    // Authorization: Bearer <access_token>
+    // Authorization: Token <access_token>
 
     // Verify Token
     function verifyToken(req, res, next) {

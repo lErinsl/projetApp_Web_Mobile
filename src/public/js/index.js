@@ -3,9 +3,18 @@ var ListeaFaire = angular.module('ListeaFaire', ['ngMaterial']);
 // function mainController($scope, $http) {
 ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
 
-    if (isConnect($http) == false) {
+    //isConnect :
+    token = localStorageGET('token',false)
+    if (token == false) {
         document.location.href = "./connection.html";
     }
+
+    const httpOptions = {
+        headers: {
+            'Authorization': token
+        }
+    };
+    
     $scope.logout = function() {
         localStorageREMOVE('token');
         document.location.href = "./connection.html";
@@ -33,7 +42,7 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
     }
 
     var refreshGlobal = function () {
-        $http.post('/getTasksGroup/').then(function (data) {
+        $http.post('/getTasksGroup/',{},httpOptions).then(function (data) {
             $scope.projectliste = data.data;
             console.log(data.data);
 
@@ -57,7 +66,7 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
     //--------------------------------------------------------------------------
 //Project:
     refreshProject = function () {
-        $http.post('/getTasksGroup').then(function (data) {
+        $http.post('/getTasksGroup',{},httpOptions).then(function (data) {
             $scope.projectliste = data.data;
         }).catch(function (response) {
             console.error('Error', response);
@@ -74,7 +83,7 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
         console.log($scope.formTaskGroup);
         $scope.formTaskGroup.name = "Project "+$scope.projectliste.length;
 
-        $http.post('/addTasksGroup', $scope.formTaskGroup)
+        $http.post('/addTasksGroup', $scope.formTaskGroup,httpOptions)
             .then(function (data) {
                 $scope.formTaskGroup = {};
                 console.log(data);
@@ -88,7 +97,7 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
     }
 
     $scope.deleteProject = function (id) {
-        $http.delete('/deleteTasksGroup/' + id)
+        $http.delete('/deleteTasksGroup/' + id,httpOptions)
             .then(function (data) {
                 console.log(data);
 
@@ -108,7 +117,7 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
     //------------------------------------------------------------------------------------
 //TASK
     refreshTask = function (taskGroup) {
-        $http.post('/getTaskSet/' + taskGroup._id).then(function (data) {
+        $http.post('/getTaskSet/' + taskGroup._id,{},httpOptions).then(function (data) {
             $scope.laliste = data.data;
         }).catch(function (response) {
             console.error('Error', response);
@@ -122,7 +131,7 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
         $scope.formData.taskGroup = taskGroup._id;
         $scope.formData.done = false;
 
-        $http.post('/addTask', $scope.formData)
+        $http.post('/addTask', $scope.formData,httpOptions)
         .then(function (data) {
             //console.log($scope.formData);
             $scope.formData = {};
@@ -138,7 +147,7 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
     };
 
     $scope.deleteTodo = function (id, taskGroup) {
-        $http.delete('/deleteTaskSet/' + id)
+        $http.delete('/deleteTaskSet/' + id,httpOptions)
             .then(function (data) {
                 //$scope.laliste = data.data;
                 console.log(data);
@@ -168,7 +177,7 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
         $scope.formDataModif.taskGroup = taskGroup._id;
         console.log($scope.formDataModif);
 
-        $http.post('/updateTaskSet/' + id, $scope.formDataModif)
+        $http.post('/updateTaskSet/' + id, $scope.formDataModif,httpOptions)
             .then(function (data) {
                 $scope.formDataModif = {};
                 $scope.myvar = {};
@@ -186,7 +195,7 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
     $scope.changeCheck = function (task) {
         task.done = !task.done;
         task.dateCheck = Date.now();
-        $http.post('/updateTaskSet/' + task._id, task)
+        $http.post('/updateTaskSet/' + task._id, task,httpOptions)
             .then(function (data) {
                 console.log(data);
 
@@ -197,20 +206,5 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
                 console.log("Error:" + data);
             });
     };
-
-
-    $scope.name = 'Yuval';
-    $scope.showVal = function () { alert($scope.name); };
-    $scope.onValueChanged = function (val, done) {
-        $timeout(function () {
-            var err = Math.random() > 0.5 ? new Error() : null; // Lets fail somtimes
-            done(err);
-        }, 1000);
-    }
-    
-    function EditLabelController() {
-        this.mode = EditLabelController.Modes.View;
-        this.originalValue = '';
-    }
 
 });

@@ -85,26 +85,6 @@ TodoApp.controller('InscriptionController', function ($scope, $http) {
     existEmail(form, result);
   }
 
-  $scope.recupererUser = function(){
-    $scope.formData.page = "connection";
-    
-    $http.post('/getusers', $scope.formData)
-        .success(function(data){
-          if (data.length>0){
-            $scope.formData = {};
-            // cookie pour l'id
-            document.cookie = "idUser="+data[0]._id;
-            document.location.href="./meslistes.html";
-          } 
-          else{
-            $scope.errorId = true;
-          }
-        })
-        .error(function(data){
-          console.log('Error: ' + data);
-        });
-  };
-
   existEmail = function (form , result) {
     $http.get('/existemail/' + $scope.formData.email)
       .then(function (data) {
