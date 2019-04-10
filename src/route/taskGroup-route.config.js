@@ -1,6 +1,6 @@
 const listCollect = "TasksGroup"
 
-exports.routesConfigs = function (app, dataLayer,jwt) {
+exports.routesConfigs = function (app, dataLayer, jwt) {
 
     //insert project
     app.post("/addTasksGroup", verifyToken, (req, res) => {
@@ -42,7 +42,6 @@ exports.routesConfigs = function (app, dataLayer,jwt) {
 
     //get project
     app.post("/getTasksGroup",verifyToken, (req, res) => {
-
 
         jwt.verify(req.token, 'secretkey', (err, authData) => {
             if (err) {

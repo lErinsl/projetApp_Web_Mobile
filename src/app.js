@@ -34,7 +34,7 @@ AuthRouter.authentificationConfigs(app, dataLayer,jwt);
 //----------------------------------------------------------------------------
 //Task
 const TasksRouter = require('./route/task-route.config.js');
-TasksRouter.routesConfigs(app,dataLayer);
+TasksRouter.routesConfigs(app,dataLayer,jwt);
 
 //----------------------------------------------------------------------------
 //Project:
