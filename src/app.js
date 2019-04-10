@@ -3,6 +3,7 @@ var dataLayer = require('./dataLayer.js');
 
 //server web
 var express = require('express');
+var jwt = require('jsonwebtoken');
 var app = express();
 var bodyParser = require('body-parser');
 
@@ -25,6 +26,12 @@ dataLayer.init(function () {
 });
 
 // page web :
+//----------------------------------------------------------------------------
+//Authentification:
+const AuthRouter = require('./authentification-route.config.js');
+AuthRouter.authentificationConfigs(app, dataLayer,jwt);
+
+//----------------------------------------------------------------------------
 //Task
 const TasksRouter = require('./task-route.config.js');
 TasksRouter.routesConfigs(app,dataLayer);

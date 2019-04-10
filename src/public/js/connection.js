@@ -1,30 +1,31 @@
-var TodoApp = angular.module('TodoApp', []);
+var TodoApp = angular.module('TodoApp', ['ngMaterial', 'ngMessages']);
 
-function ConnectionController($scope, $http){
+// function ConnectionController($scope, $http){
+TodoApp.controller('ConnectionController', function ($scope, $http) {
   $scope.formData = {};
-  $scope.errorId = false;
-  $scope.idUser = GetCookie("idUser");
 
-  if ($scope.idUser!=null) document.location.href="./index.html";
+  console.log(isConnect($http));
+  if(isConnect($http) == true){
+    document.location.href = "./index.html";
+  }
 
-  $scope.seconnecter = function(){
-    $scope.formData.page = "connection";
+  $scope.connect = function(form){
     
-    $http.post('/getusers', $scope.formData)
-        .success(function(data){
-          if (data.length>0){
-            $scope.formData = {};
-            $scope.errorId = false;
-            // cookie pour l'id
-            document.cookie = "idUser="+data[0]._id;
-            document.location.href="./meslistes.html";
-          } 
-          else{
-            $scope.errorId = true;
+    $http.post('/login', $scope.formData)
+        .then(function(data){
+          console.log(data);
+          console.log(data.data.token);
+          if(data.data.token.length > 10){
+            localStorageSET('token','token '+data.data.token);
+            document.location.href = "./index.html";
+            form.nickpass.$setValidity('errone', true);
+          }else{
+            form.nickpass.$setValidity('errone', false);
           }
         })
-        .error(function(data){
+        .catch(function(data){
           console.log('Error: ' + data);
+          form.nickpass.$setValidity('errone', false);
         });
-  }
-}
+  };
+});
