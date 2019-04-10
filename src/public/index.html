@@ -18,6 +18,7 @@
         <!-- Angular Material Library -->
         <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.12/angular-material.min.js"></script>
 
+        <script src="./js/localStorage.service.js"></script>
         <script src="./js/index.js"></script>
         <link rel="stylesheet" href="./css/bootstrap.min.css">
         <link rel="stylesheet" href="./css/style.css">
@@ -32,10 +33,9 @@
         
                 <h2 flex md-truncate>ToDo Liste : <span ng-click="">{{TasksGroupSelect.name}}</span></h2>
 
-                <label>Name:</label>
-                <edit-label value="name" type="text" value-changed="onValueChanged(value, done)">
-                    <div></div>
-                </edit-label>
+                <md-button ng-click="logout()" class="md-raised">
+                    deconnection
+                </md-button>
             </div>
         </md-toolbar>
 

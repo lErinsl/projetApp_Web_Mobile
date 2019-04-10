@@ -4,7 +4,7 @@ var TodoApp = angular.module('TodoApp', ['ngMaterial', 'ngMessages']);
 TodoApp.controller('ConnectionController', function ($scope, $http) {
   $scope.formData = {};
 
-  console.log(isConnect($http));
+  //console.log(isConnect($http));
   if(isConnect($http) == true){
     document.location.href = "./index.html";
   }

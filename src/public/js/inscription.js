@@ -2,6 +2,11 @@ var TodoApp = angular.module('TodoApp', ['ngMaterial','ngMessages']);
 
 //function InscriptionController($scope, $http){
 TodoApp.controller('InscriptionController', function ($scope, $http) {
+
+  if (isConnect($http) == true) {
+    document.location.href = "./index.html";
+  }
+
   $scope.formData = {};
 
   existEmailNickname = 0;

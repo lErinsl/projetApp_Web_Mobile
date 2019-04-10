@@ -3,6 +3,14 @@ var ListeaFaire = angular.module('ListeaFaire', ['ngMaterial']);
 // function mainController($scope, $http) {
 ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
 
+    if (isConnect($http) == false) {
+        document.location.href = "./connection.html";
+    }
+    $scope.logout = function() {
+        localStorageREMOVE('token');
+        document.location.href = "./connection.html";
+    }
+
     $scope.TasksGroupSelect = {};
     $scope.formTaskGroup = {};
     $scope.formData = {};
