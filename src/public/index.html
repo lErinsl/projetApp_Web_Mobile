@@ -28,7 +28,14 @@
         <md-toolbar class="md-hue-2">
             <div class="md-toolbar-tools">
                 <md-button ng-click="toggleLeft()" class="md-raised">
-                    Toggle Sidenav
+                    <ng-md-icon icon="menu" size="40">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="40" height="40">
+                            <path d="M3 18h18v-2H3v2z"></path>
+                            <path d="M3 13h18v-2H3v2z"></path>
+                            <path d="M3 6v2h18V6H3z"></path>
+                        </svg>
+                    </ng-md-icon>
+                    Liste des projets
                 </md-button>
         
                 <h2 flex md-truncate>ToDo Liste : {{TasksGroupSelect.name}} <small>[{{TasksGroupSelect.nicknameCreateur}}]</small></h2>
@@ -42,11 +49,17 @@
 
         <section layout="row" flex>
         
-            <md-sidenav class="md-sidenav-left" md-component-id="left" md-disable-backdrop md-whiteframe="4">
+            <md-sidenav class="md-sidenav-left" md-component-id="left" md-whiteframe="4">
         
-                <md-toolbar class="md-theme-indigo">
-                    <md-button ng-click="toggleLeft()" class="md-accent">
-                        Close this Sidenav
+                <md-toolbar>
+                    <md-button ng-click="toggleLeft()">
+                        Liste des projets
+                        <ng-md-icon icon="chevron_left" size="40">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="40"
+                                height="40">
+                                <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path>
+                            </svg>
+                        </ng-md-icon>
                     </md-button>
                 </md-toolbar>
         
@@ -59,101 +72,180 @@
                         <md-button ng-click="selectProject(project)">
                             {{project.name}}
                         </md-button>
-                        <md-button class="md-raised" ng-click="deleteProject(project._id)">Supprimer</md-button>
+                        <md-button class="md-icon-button" ng-click="deleteProject(project._id)" aria-label="Delete_Project">
+                            <ng-md-icon icon="delete_sweep" size="26"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48"
+                                    height="26" style="fill : #9E0000">
+                                    <path d="M15 16h4v2h-4z"></path>
+                                    <path d="M15 8h7v2h-7z"></path>
+                                    <path d="M15 12h6v2h-6z"></path>
+                                    <path d="M3 18c0 1.1.9 2 2 2h6c1.1 0 2-.9 2-2V8H3v10z"></path>
+                                    <path d="M14 5h-3l-1-1H6L5 5H2v2h12z"></path>
+                                </svg></ng-md-icon>
+                        </md-button>
                     </div>
 
                     <h5>Projets partagés avec vous :</h5>
                     <div ng-repeat="project in projectPartageliste">
                         <md-button ng-click="selectProject(project)">
                             {{project.name}} [{{project.nicknameCreateur}}]
-                            <md-button class="md-raised" ng-click="partageProjectRemoveUser(myself.nickname,project)">Partir</md-button>
                         </md-button>
-                        <!-- <md-button class="md-raised" ng-click="deleteProject(project._id)">Supprimer</md-button> -->
+                        <md-button class="md-icon-button" ng-click="partageProjectRemoveUser(myself.nickname,project)" aria-label="Remove_you_from_project">
+                            <ng-md-icon icon="cancel" size="26"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="26" height="26" style="fill : #680000">
+                                    <path
+                                        d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z">
+                                    </path>
+                                </svg>
+                            </ng-md-icon>
+                        </md-button>
                     </div>
-
                 </md-content>
-        
             </md-sidenav>
         
             <md-content flex layout-padding>
+                <div>
+                    <div layout="row" layout-align="end" ng-if="myself.nickname == TasksGroupSelect.nicknameCreateur">
+                        <div layout="column" class="inputBarPartage">
+                            <form>
+                                <div layout="row" layout-align="center center">
+                                    <input type="text" class="form-control" placeholder="Partager le projet avec un utilisateur" ng-model="TasksGroupSelect.nicknameOrEmail">
+                                    <md-button class="md-primary md-raised buttonBar" type="submit" ng-click="partageProject()">
+                                        Partager
+                                    </md-button>
+                                </div>
+                                <div layout="row">
+                                    <div ng-if="partageError == 400 || partageError == 304" class="alert alert-warning" role="alert">
+                                        {{msgPartageError}}
+                                    </div>
+                                    <div ng-if="partageError == 401" class="alert alert-danger" role="alert">
+                                        {{msgPartageError}}
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
 
-                <div id="todo-form" layout="column">
+                    <div layout="row" layout-align="end" style="margin : 5px">
+                        <div ng-if="myself.nickname != TasksGroupSelect.nicknameCreateur">
+                            <div layout="column"> Partagé avec :</div>
+                            <div class="ovale">
+                                <span class="margin">{{TasksGroupSelect.nicknameCreateur}}</span>
+                            </div>
+                        </div>
+                        <div ng-repeat="nickname in TasksGroupSelect.listviewer">
+                            <div class="ovale">
+                                <span class="margin">{{nickname}}<i ng-if="nickname == myself.nickname"> (Vous)</i></span>
+                                <span ng-if="myself.nickname == TasksGroupSelect.nicknameCreateur">
+
+                                    <md-button class="md-icon-button partage_bt_icon" ng-click="partageProjectRemoveUser(nickname,TasksGroupSelect)"
+                                    aria-label="Remove_user_from_project">
+                                        <md-icon
+                                        md-svg-src="data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxnPjxwYXRoIGQ9Ik0xOSA2LjQxbC0xLjQxLTEuNDEtNS41OSA1LjU5LTUuNTktNS41OS0xLjQxIDEuNDEgNS41OSA1LjU5LTUuNTkgNS41OSAxLjQxIDEuNDEgNS41OS01LjU5IDUuNTkgNS41OSAxLjQxLTEuNDEtNS41OS01LjU5eiIvPjwvZz48L3N2Zz4="
+                                        aria-hidden="true" role="img">
+                                            <svg version="1.1" x="0px" y="0px" viewBox="0 0 24 24"
+                                            xmlns="http://www.w3.org/2000/svg" fit="" height="100%" width="100%"
+                                            preserveAspectRatio="xMidYMid meet" focusable="false">
+                                                <g>
+                                                    <path d="M19 6.41l-1.41-1.41-5.59 5.59-5.59-5.59-1.41 1.41 5.59 5.59-5.59 5.59 1.41 1.41 5.59-5.59 5.59 5.59 1.41-1.41-5.59-5.59z">
+                                                    </path>
+                                                </g>
+                                            </svg>
+                                        </md-icon>
+                                    </md-button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                <div id="todo-form" layout="column" class="inputBar" style="margin-top : 50px; margin-bottom : 30px;">
                     <form>
-                        <div class="form-group">
-                            <input type="text" class="form-control" placeholder="écrire quelque chose" ng-model="formData.name">
-                            <md-button class="md-primary md-raised" type="submit" ng-click="createTodo(TasksGroupSelect)">Ajouter</md-button>
+                        <div layout="row" layout-align="center center">
+                            <input type="text" class="form-control" placeholder="Ajouter une tâche..." ng-model="formData.name">
+                            <md-button class="md-primary md-raised buttonBar" type="submit" ng-click="createTodo(TasksGroupSelect)">
+                                <span class="fas fa-plus"></span>
+                                Ajouter
+                            </md-button>
+                            </div>
                             <div ng-if="createError == 401" class="alert alert-danger" role="alert">
                                 {{msgCreateError}}
                             </div>
-                        </div>
                     </form>
                 </div>
-        
-                <div layout="column" layout-align="top center">
 
-                    <div ng-if="myself.nickname == TasksGroupSelect.nicknameCreateur">
-                        <div>
-                            <input type="text" class="form-control" placeholder="Partager le projet avec un utilisateur" ng-model="TasksGroupSelect.nicknameOrEmail">
-                            <md-button class="md-primary md-raised" ng-click="partageProject()">
-                                Partager
-                            </md-button>
-                        </div>
-                        <div layout="row">
-                            <div ng-repeat="nickname in TasksGroupSelect.listviewer">
-                                {{nickname}}
-                                <md-button class="md-raised" ng-click="partageProjectRemoveUser(nickname,TasksGroupSelect)">Supprimer</md-button>
-                            </div>
-                            <div ng-if="partageError == 400 || partageError == 304" class="alert alert-warning" role="alert">
-                                {{msgPartageError}}
-                            </div>
-                            <div ng-if="partageError == 401" class="alert alert-danger" role="alert">
-                                {{msgPartageError}}
-                            </div>
-                        </div>
-                            
-                    </div>
-                    <div ng-if="myself.nickname != TasksGroupSelect.nicknameCreateur" layout="row">
-                        <span>Partagé avec : </span>
-                        <small>
-                            {{TasksGroupSelect.nicknameCreateur}}, 
-                            <div ng-repeat="nickname in TasksGroupSelect.listviewer">
-                                {{nickname}} <span ng-if="nickname == myself.nickname">(Vous)</span>, 
-                            </div>
-                        </small>
-                    </div>
+                <div layout="column" layout-align="top center">
 
                     <br /> Nombre de task: {{ laliste.length }}
                     <div id="todo-list">
 
-                        <div ng-repeat="x in laliste">
-                            <h5>
-                    
-                                <div ng-if="myvar == x._id">
-                                    <input type="text" class="form-control" placeholder="écrire quelque chose"
-                                        ng-model="formDataModif.name">
-                                    <md-button class="md-primary md-raised" ng-click="modifTodo(x._id,TasksGroupSelect)">
-                                        Valider
-                                    </md-button>
-                                    <md-button class="md-primary md-raised" ng-click="annulerModification()">
-                                        Annuler
-                                    </md-button>
-                                </div>
-                    
-                                <div ng-if="myvar != x._id">
-                                    <md-checkbox ng-click="changeCheck(x)" ng-checked="x.done">
-                                        <span ng-style="{ 'text-decoration' : (x.done == false) ? 'blink' : 'line-through' }">
-                                            {{ x.name }}
-                                            M[{{ x.date | date:'yyyy-MM-dd à hh:mm:ss'}}]
-                                            C[{{ x.dateCheck | date:'yyyy-MM-dd à hh:mm:ss'}}]
-                                        </span>
-                                        <md-button class="md-primary md-raised" ng-click="modifier(x)">
-                                            Modifier
+                        <table class="table">
+                            <thead>
+                                <th scope="col">#</th>
+                                <th scope="col">Tâche</th>
+                                <th scope="col">Createur</th>
+                                <th scope="col">Date création</th>
+                                <th scope="col">Dernière modification</th>
+                                <th scope="col"></th>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="x in laliste" >
+                                    <td>
+                                        <md-checkbox ng-click="changeCheck(x)" ng-checked="x.done" aria-label="ShowHideAccountant">
+                                        </md-checkbox>
+                                    </td>
+                                    <td ng-click="changeCheck(x)" ng-if="myvar != x._id" ng-style="{ 'text-decoration' : (x.done == false) ? 'blink' : 'line-through' }">
+                                        {{ x.name }}
+                                    </td>
+                                    <td ng-if="myvar == x._id">
+                                        <input type="text" class="form-control" placeholder="Modifier la tâche..." ng-model="formDataModif.name">
+                                    </td>
+                                    <td ng-click="changeCheck(x)" ng-style="{ 'text-decoration' : (x.done == false) ? 'blink' : 'line-through' }">
+                                        {{ x.nicknameCreateur }}
+                                    </td>
+                                    <td ng-click="changeCheck(x)" ng-style="{ 'text-decoration' : (x.done == false) ? 'blink' : 'line-through' }">
+                                        {{ x.date | date:'yyyy-MM-dd à hh:mm:ss'}}
+                                    </td>
+                                    <td ng-click="changeCheck(x)" ng-style="{ 'text-decoration' : (x.done == false) ? 'blink' : 'line-through' }">
+                                        {{ x.dateCheck | date:'yyyy-MM-dd à hh:mm:ss'}}
+                                    </td>
+                                    <td ng-if="myvar != x._id">
+                                        <md-button class="md-icon-button" ng-click="modifier(x)" aria-label="modif_Task">
+                                            <ng-md-icon icon="edit" size="30"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="30" height="30" style="fill : #3F51B5">
+                                                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z"></path>
+                                                    <path
+                                                        d="M20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z">
+                                                    </path>
+                                                </svg>
+                                            </ng-md-icon>
                                         </md-button>
-                                        <md-button class="md-raised" ng-click="deleteTodo(x._id,TasksGroupSelect)">Supprimer</md-button>
-                                </div>
-
-                            </h5>
-                        </div>
+                                        <md-button class="md-icon-button" ng-click="deleteTodo(x._id,TasksGroupSelect)" aria-label="delete_Task">
+                                            <ng-md-icon icon="delete_sweep" size="30">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="30"
+                                                    height="30" style="fill : #9E0000">
+                                                    <path d="M3 18c0 1.1.9 2 2 2h6c1.1 0 2-.9 2-2V8H3v10z"></path>
+                                                    <path d="M14 5h-3l-1-1H6L5 5H2v2h12z"></path>
+                                                </svg>
+                                            </ng-md-icon>
+                                        </md-button>
+                                    </td>
+                                    <td ng-if="myvar == x._id">
+                                        <md-button class="md-icon-button" type="submit" ng-click="modifTodo(x._id,TasksGroupSelect)" aria-label="Valid modification">
+                                            <ng-md-icon icon="check" size="30">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="30" height="30" style="fill : #3F51B5">
+                                                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path>
+                                                </svg>
+                                            </ng-md-icon>
+                                        </md-button>
+                                        <md-button class="md-icon-button" ng-click="annulerModification()" aria-label="Cancel modification">
+                                            <ng-md-icon icon="cancel" size="30">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="30" height="30">
+                                                    <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z">
+                                                    </path>
+                                                </svg>
+                                            </ng-md-icon>
+                                        </md-button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
         
                 </div>

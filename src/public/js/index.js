@@ -290,7 +290,7 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
                         break;
                     case 400:
                         $scope.partageError = 400;
-                        $scope.msgPartageError = "Le pseudo ou l'email entrée n'existe pas.";
+                        $scope.msgPartageError = "Le pseudo ou l'email entré n'existe pas.";
                         break;
                     case 304:
                         $scope.partageError = 304;
@@ -384,6 +384,7 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
     };
 
     $scope.modifier = function (elem) {
+        $scope.formDataModif.date = elem.date;
         $scope.formDataModif.name = elem.name;
         $scope.formDataModif.done = elem.done;
         $scope.myvar = elem._id;
@@ -395,7 +396,6 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
     }
 
     $scope.modifTodo = function (id, taskGroup) {
-        $scope.formDataModif.date = Date.now();
         $scope.formDataModif.dateCheck = Date.now();
         $scope.formDataModif.taskGroup = taskGroup._id;
         console.log($scope.formDataModif);
