@@ -66,6 +66,7 @@
                     <div ng-repeat="project in projectPartageliste">
                         <md-button ng-click="selectProject(project)">
                             {{project.name}} [{{project.nicknameCreateur}}]
+                            <md-button class="md-raised" ng-click="partageProjectRemoveUser(myself.nickname,project)">Partir</md-button>
                         </md-button>
                         <!-- <md-button class="md-raised" ng-click="deleteProject(project._id)">Supprimer</md-button> -->
                     </div>
