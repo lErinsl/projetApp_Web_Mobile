@@ -54,7 +54,7 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
     function buildToggler(componentId) {
         return function () {
             console.log($mdSidenav(componentId).toggle());
-            refreshProject();
+            refreshProjectPartage();
         };
     }
 
@@ -135,6 +135,13 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
 
     //--------------------------------------------------------------------------
 //Project:
+
+    refreshProjectAll = function () {
+        refreshProject();
+
+        refreshProjectPartage();
+    }
+
     refreshProject = function () {
         $http.post('/getTasksGroup',{},httpOptions).then(function (data) {
             $scope.projectliste = data.data;
@@ -149,7 +156,9 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
                     break;
             }
         });
+    }
 
+    refreshProjectPartage = function () {
         $http.post('/getTasksGroup/partage', {}, httpOptions).then(function (data) {
             console.log(data);
             $scope.projectPartageliste = data.data;
@@ -206,7 +215,7 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
                 if (id == $scope.TasksGroupSelect._id){
                     refreshGlobal();
                 }else{
-                    refreshProject();
+                    refreshProjectAll();
                 }
             })
             .catch(function (data) {
