@@ -69,6 +69,24 @@ exports.authentificationConfigs = function (app, dataLayer, jwt) {
             }
         });
     });
+
+    app.post('/getMyself', verifyToken, (req, res) => {
+        jwt.verify(req.token, 'secretkey', (err, authData) => {
+            if (err) {
+                res.sendStatus(403);
+            } else {
+                //res.sendStatus(200);
+                console.log(authData);
+                var myself = {
+                    email : authData.users.email,
+                    nickname : authData.users.nickname
+                }
+
+                res.json(myself);
+            }
+        });
+    });
+
     // FORMAT OF TOKEN
     // Authorization: Token <access_token>
 

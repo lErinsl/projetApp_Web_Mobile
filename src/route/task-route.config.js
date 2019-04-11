@@ -1,4 +1,6 @@
 const taskCollect = "Tasks"
+const listCollect = "TasksGroup"
+
 //insert task
 exports.routesConfigs = function (app, dataLayer, jwt){
     
@@ -9,24 +11,48 @@ exports.routesConfigs = function (app, dataLayer, jwt){
                 res.sendStatus(403);
             } else {
                 //res.sendStatus(200);
-
-                //console.log(authData.users._id)
-
                 if (req.body && typeof req.body.name != 'undefined' && typeof req.body.done) {
 
+                    console.log("insert Task")
                     console.log(req.body);
+                    
+                    var filter = {
+                        _id: req.body.taskGroup
+                    }
+                    dataLayer.get(listCollect, filter, function (dtSet) {
+                        console.log(dtSet);
+                        if (dtSet != null && dtSet.length > 0) {
+                            console.log("auto");
+                            viewer = false;
+                            if (dtSet[0].listviewer != null) {
+                                for (let i = 0; i < dtSet[0].listviewer.length; i++) {
+                                    if (dtSet[0].listviewer[i] == authData.users.nickname) {
+                                        i = dtSet[0].listviewer.length;
+                                        viewer = true
+                                    }
+                                }
+                            }
 
-                    var task = {
-                        nicknameCreateur: authData.users.nickname,
-                        taskGroup: req.body.taskGroup,
-                        name: req.body.name,
-                        date: req.body.date,
-                        dateCheck: req.body.dateCheck,
-                        done: req.body.done
-                    };
+                            if (dtSet[0].nicknameCreateur == authData.users.nickname || viewer == true) {
+                                //console.log("oui");
+                                var task = {
+                                    nicknameCreateur: authData.users.nickname,
+                                    taskGroup: req.body.taskGroup,
+                                    name: req.body.name,
+                                    date: req.body.date,
+                                    dateCheck: req.body.dateCheck,
+                                    done: req.body.done
+                                };
 
-                    dataLayer.insert(taskCollect, task, function () {
-                        res.send({ success: true });
+                                dataLayer.insert(taskCollect, task, function () {
+                                    res.send({ success: true });
+                                });
+                            }else{
+                                res.sendStatus(401);
+                            }
+                        }else{
+                            res.sendStatus(401);
+                        }
                     });
 
                 } else {
@@ -76,23 +102,47 @@ exports.routesConfigs = function (app, dataLayer, jwt){
 
                 if (req.params.elem_id && req.body && typeof req.body.name != 'undefined' && typeof req.body.done) {
 
-                    console.log(req.body);
+                    var filter = {
+                        _id: req.body.taskGroup
+                    }
+                    dataLayer.get(listCollect, filter, function (dtSet) {
+                        console.log(dtSet);
+                        if (dtSet != null && dtSet.length > 0) {
+                            console.log("auto");
+                            viewer = false;
+                            if (dtSet[0].listviewer != null) {
+                                for (let i = 0; i < dtSet[0].listviewer.length; i++) {
+                                    if (dtSet[0].listviewer[i] == authData.users.nickname) {
+                                        i = dtSet[0].listviewer.length;
+                                        viewer = true
+                                    }
+                                }
+                            }
 
-                    var ID = req.params.elem_id;
+                            if (dtSet[0].nicknameCreateur == authData.users.nickname || viewer == true) {
+                                console.log("update task");
+                                var ID = req.params.elem_id;
 
-                    var task = {
-                        nicknameCreateur: authData.users.nickname,
-                        taskGroup: req.body.taskGroup,
-                        name: req.body.name,
-                        date: req.body.date,
-                        dateCheck: req.body.dateCheck,
-                        done: req.body.done
-                    };
+                                var task = {
+                                    nicknameCreateur: authData.users.nickname,
+                                    taskGroup: req.body.taskGroup,
+                                    name: req.body.name,
+                                    date: req.body.date,
+                                    dateCheck: req.body.dateCheck,
+                                    done: req.body.done
+                                };
 
-                    dataLayer.update(taskCollect, ID, task, function () {
-                        res.send({ success: true });
+                                dataLayer.update(taskCollect, ID, task, function () {
+                                    res.send({ success: true });
+                                });
+                            } else {
+                                res.sendStatus(401);
+                            }
+                        } else {
+                            res.sendStatus(401);
+                        }
                     });
-
+                    
                 } else {
 
                     res.send({
@@ -107,21 +157,49 @@ exports.routesConfigs = function (app, dataLayer, jwt){
     });
 
     //delete task
-    app.delete("/deleteTaskSet/:elem_id", verifyToken, (req, res) => {
+    app.delete("/deleteTaskSet/:elem_id/:taskGroup", verifyToken, (req, res) => {
         jwt.verify(req.token, 'secretkey', (err, authData) => {
             if (err) {
                 res.sendStatus(403);
             } else {
                 //res.sendStatus(200);
                 //console.log(authData.users._id)
-                if (req.params.elem_id) {
-                    console.log(req.body);
-                    var task = {
-                        _id: req.params.elem_id
-                    };
+                if (req.params.elem_id && req.params.taskGroup) {
 
-                    dataLayer.delete(taskCollect, task, function () {
-                        res.send({ success: true });
+                    console.log(req.body);
+                    var filter = {
+                        _id: req.params.taskGroup
+                    }
+                    dataLayer.get(listCollect, filter, function (dtSet) {
+                        console.log(dtSet);
+                        if (dtSet != null && dtSet.length > 0) {
+                            console.log("auto");
+                            viewer = false;
+                            if (dtSet[0].listviewer != null) {
+                                for (let i = 0; i < dtSet[0].listviewer.length; i++) {
+                                    if (dtSet[0].listviewer[i] == authData.users.nickname) {
+                                        i = dtSet[0].listviewer.length;
+                                        viewer = true
+                                    }
+                                }
+                            }
+
+                            if (dtSet[0].nicknameCreateur == authData.users.nickname || viewer == true) {
+                                console.log("delete task");
+                                console.log(req.body);
+                                var task = {
+                                    _id: req.params.elem_id
+                                };
+
+                                dataLayer.delete(taskCollect, task, function () {
+                                    res.send({ success: true });
+                                });
+                            } else {
+                                res.sendStatus(401);
+                            }
+                        } else {
+                            res.sendStatus(401);
+                        }
                     });
                 } else {
                     res.send({
@@ -156,5 +234,37 @@ exports.routesConfigs = function (app, dataLayer, jwt){
             res.sendStatus(403);
         }
 
-    }
+    };
+
+    function autorisation(req,dataLayer,authData) {
+        
+        console.log("autorisation");
+        //console.log(req);
+        var filter = {
+            _id: req.body.taskGroup
+        }
+        dataLayer.get(listCollect, filter, function (dtSet) {
+            console.log(dtSet);
+            if(dtSet != null && dtSet.length > 0){
+                console.log("auto");
+                viewer = false;
+                if(dtSet[0].listviewer != null){
+                    for (let i = 0; i < dtSet[0].listviewer.length; i++) {
+                        if (dtSet[0].listviewer[i] == authData.users.nickname) {
+                            i = dtSet[0].listviewer.length;
+                            viewer = true
+                        }
+                    }
+                }
+
+                if (dtSet[0].nicknameCreateur == authData.users.nickname || viewer == true){
+                    console.log("oui");
+                    return true
+                }
+            }
+            console.log("non");
+            return false;
+        });
+    };
+
 };

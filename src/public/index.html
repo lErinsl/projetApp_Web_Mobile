@@ -31,22 +31,14 @@
                     Toggle Sidenav
                 </md-button>
         
-                <h2 flex md-truncate>ToDo Liste : <span ng-click="">{{TasksGroupSelect.name}}</span></h2>
+                <h2 flex md-truncate>ToDo Liste : {{TasksGroupSelect.name}} <small>[{{TasksGroupSelect.nicknameCreateur}}]</small></h2>
 
+                {{myself.nickname}}
                 <md-button ng-click="logout()" class="md-raised">
                     deconnection
                 </md-button>
             </div>
         </md-toolbar>
-
-        <div id="todo-form">
-            <form>
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="écrire quelque chose" ng-model="formData.name">
-                    <md-button class="md-primary md-raised" type="submit" ng-click="createTodo(TasksGroupSelect)">Ajouter</md-button>
-                </div>
-            </form>
-        </div>
 
         <section layout="row" flex>
         
@@ -54,14 +46,14 @@
         
                 <md-toolbar class="md-theme-indigo">
                     <md-button ng-click="toggleLeft()" class="md-accent">
-                            <h1 class="md-toolbar-tools">Projets :</h1>
                         Close this Sidenav
                     </md-button>
                 </md-toolbar>
         
                 <md-content layout-margin>
+                    <h5>Vos projets :</h5>
                     <md-button ng-click="newProject()" class="md-raised">
-                        Nouveau projet
+                        Ajouter un projet
                     </md-button>
                     <div ng-repeat="project in projectliste">
                         <md-button ng-click="selectProject(project)">
@@ -69,38 +61,65 @@
                         </md-button>
                         <md-button class="md-raised" ng-click="deleteProject(project._id)">Supprimer</md-button>
                     </div>
-                    <p>
-                        This sidenav is not showing any backdrop, where users can click on it, to close the sidenav.
-                    </p>
+
+                    <h5>Projets partagés avec vous :</h5>
+                    <div ng-repeat="project in projectPartageliste">
+                        <md-button ng-click="selectProject(project)">
+                            {{project.name}} [{{project.nicknameCreateur}}]
+                        </md-button>
+                        <!-- <md-button class="md-raised" ng-click="deleteProject(project._id)">Supprimer</md-button> -->
+                    </div>
+
                 </md-content>
         
             </md-sidenav>
         
             <md-content flex layout-padding>
+
+                <div id="todo-form" layout="column">
+                    <form>
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="écrire quelque chose" ng-model="formData.name">
+                            <md-button class="md-primary md-raised" type="submit" ng-click="createTodo(TasksGroupSelect)">Ajouter</md-button>
+                            <div ng-if="createError == 401" class="alert alert-danger" role="alert">
+                                {{msgCreateError}}
+                            </div>
+                        </div>
+                    </form>
+                </div>
         
                 <div layout="column" layout-align="top center">
 
-        
-                    <div>
-                        <md-button ng-click="toggleLeft()" class="md-raised">
-                            Toggle Sidenav
-                        </md-button>
+                    <div ng-if="myself.nickname == TasksGroupSelect.nicknameCreateur">
+                        <div>
+                            <input type="text" class="form-control" placeholder="Partager le projet avec un utilisateur" ng-model="TasksGroupSelect.nicknameOrEmail">
+                            <md-button class="md-primary md-raised" ng-click="partageProject()">
+                                Partager
+                            </md-button>
+                        </div>
+                        <div layout="row">
+                            <div ng-repeat="nickname in TasksGroupSelect.listviewer">
+                                {{nickname}}
+                                <md-button class="md-raised" ng-click="partageProjectRemoveUser(nickname,TasksGroupSelect)">Supprimer</md-button>
+                            </div>
+                            <div ng-if="partageError == 400 || partageError == 304" class="alert alert-warning" role="alert">
+                                {{msgPartageError}}
+                            </div>
+                            <div ng-if="partageError == 401" class="alert alert-danger" role="alert">
+                                {{msgPartageError}}
+                            </div>
+                        </div>
+                            
                     </div>
-
-                    <input type="text" class="form-control" placeholder="Partager le projet avec un utilisateur" ng-model="TasksGroupSelect.nicknameOrEmail">
-                    <div ng-repeat="nickname in TasksGroupSelect.listviewer">
-                        {{nickname}}
-                        <md-button class="md-raised" ng-click="partageProjectRemoveUser(nickname,TasksGroupSelect)">Supprimer</md-button>
+                    <div ng-if="myself.nickname != TasksGroupSelect.nicknameCreateur" layout="row">
+                        <span>Partagé avec : </span>
+                        <small>
+                            {{TasksGroupSelect.nicknameCreateur}}, 
+                            <div ng-repeat="nickname in TasksGroupSelect.listviewer">
+                                {{nickname}} <span ng-if="nickname == myself.nickname">(Vous)</span>, 
+                            </div>
+                        </small>
                     </div>
-                    <div ng-if="partageError == 400 || partageError == 304" class="alert alert-warning" role="alert">
-                        {{msgPartageError}}
-                    </div>
-                    <div ng-if="partageError == 401" class="alert alert-danger" role="alert">
-                        {{msgPartageError}}
-                    </div>
-                    <md-button class="md-primary md-raised" ng-click="partageProject()">
-                        Partager
-                    </md-button>
 
                     <br /> Nombre de task: {{ laliste.length }}
                     <div id="todo-list">

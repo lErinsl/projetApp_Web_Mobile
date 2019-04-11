@@ -4,16 +4,35 @@ var ListeaFaire = angular.module('ListeaFaire', ['ngMaterial']);
 ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
 
     //isConnect :
-    token = localStorageGET('token',false)
+    token = localStorageGET('token', false)
     if (token == false) {
         document.location.href = "./connection.html";
     }
-
     const httpOptions = {
         headers: {
             'Authorization': token
         }
     };
+
+    //on récupère les informations personnel (nickname/email)
+    $scope.myself = {};
+    $http.post('/getMyself', {}, httpOptions).then(function (data) {
+        console.log("getmyself");
+        console.log(data);
+        $scope.myself = data.data;
+    }).catch(function (response) {
+        console.error('Error', response);
+        switch (response.status) {
+            case 403:
+                $scope.logout();
+                break;
+
+            default:
+                break;
+        }
+    });
+    
+
     
     $scope.logout = function() {
         localStorageREMOVE('token');
@@ -25,14 +44,11 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
     $scope.formData = {};
     $scope.formDataModif = {};
 
+    $scope.projectPartageliste = {};
+    $scope.projectliste = {};
+
     $scope.myvar = {};
 
-    /*$http.post('/getTaskSet/' + null).then(function (data) {
-            $scope.laliste = data.data;
-            console.log(data.data);
-    }).catch(function (response) {
-        console.error('Error', response);
-    });*/
 
     $scope.toggleLeft = buildToggler('left');
     function buildToggler(componentId) {
@@ -42,6 +58,9 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
     }
 
     var refreshGlobal = function () {
+        console.log("data Refresh");
+        $scope.createError = 0;
+        $scope.partageError = 0;
         $http.post('/getTasksGroup/',{},httpOptions).then(function (data) {
             $scope.projectliste = data.data;
             console.log(data.data);
@@ -53,9 +72,49 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
                 $scope.TasksGroupSelect = $scope.projectliste[0];
             } else {
                 // si il y a 1 projet ou plus, on le selectionne directement.
-                $scope.TasksGroupSelect = $scope.projectliste[0];
+                // on regarde si le projet selectionnée existe encore:
+                if ($scope.TasksGroupSelect != null){
+                    exist = false;
+                    for (let i = 0; i < $scope.projectliste.length; i++) {
+                        if ($scope.TasksGroupSelect == $scope.projectliste[i]){
+                            exist = true;
+                            $scope.TasksGroupSelect = $scope.projectliste[i];
+                            i = $scope.projectliste.length;
+                        }
+                    }
+                    if(exist == false){
+                        // on regarde dans les projet partagées:
+                        for (let i = 0; i < $scope.projectPartageliste.length; i++) {
+                            if ($scope.TasksGroupSelect == $scope.projectPartageliste[i]) {
+                                exist = true;
+                                $scope.TasksGroupSelect = $scope.projectPartageliste[i];
+                                i = $scope.projectPartageliste.length;
+                            }
+                        }
+                        if(exist == false){
+                            $scope.TasksGroupSelect = $scope.projectliste[0];
+                        }
+                    }
+                }else{
+                    $scope.TasksGroupSelect = $scope.projectliste[0];
+                }
                 refreshTask($scope.TasksGroupSelect);
             }
+        }).catch(function (response) {
+            console.error('Error', response);
+            switch (response.status) {
+                case 403:
+                    $scope.logout();
+                    break;
+
+                default:
+                    break;
+            }
+        });
+
+        $http.post('/getTasksGroup/partage', {}, httpOptions).then(function (data) {
+            console.log(data);
+            $scope.projectPartageliste = data.data;
         }).catch(function (response) {
             console.error('Error', response);
             switch (response.status) {
@@ -70,12 +129,29 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
     }
 
     refreshGlobal();
+    //on refresh les données toutes les 5s;
+    //setInterval(refreshGlobal, 10000);
 
     //--------------------------------------------------------------------------
 //Project:
     refreshProject = function () {
         $http.post('/getTasksGroup',{},httpOptions).then(function (data) {
             $scope.projectliste = data.data;
+        }).catch(function (response) {
+            console.error('Error', response);
+            switch (response.status) {
+                case 403:
+                    $scope.logout();
+                    break;
+
+                default:
+                    break;
+            }
+        });
+
+        $http.post('/getTasksGroup/partage', {}, httpOptions).then(function (data) {
+            console.log(data);
+            $scope.projectPartageliste = data.data;
         }).catch(function (response) {
             console.error('Error', response);
             switch (response.status) {
@@ -223,6 +299,8 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
     //------------------------------------------------------------------------------------
 //TASK
     refreshTask = function (taskGroup) {
+        $scope.createError = 0;
+        $scope.partageError = 0;
         $http.post('/getTaskSet/' + taskGroup._id,{},httpOptions).then(function (data) {
             $scope.laliste = data.data;
         }).catch(function (response) {
@@ -249,7 +327,6 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
         .then(function (data) {
             //console.log($scope.formData);
             $scope.formData = {};
-            //$scope.laliste = data.data;
             console.log(data);
 
             //on réactualise les données
@@ -257,9 +334,14 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
         })
         .catch(function (data) {
             console.log("Error:" + data);
+            console.log(data);
             switch (data.status) {
                 case 403:
                     $scope.logout();
+                    break;
+                case 401:
+                    $scope.createError = 401;
+                    $scope.msgCreateError = "Il vous est actuellement impossible de créer une tâche"
                     break;
 
                 default:
@@ -269,7 +351,7 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
     };
 
     $scope.deleteTodo = function (id, taskGroup) {
-        $http.delete('/deleteTaskSet/' + id,httpOptions)
+        $http.delete('/deleteTaskSet/' + id +'/'+taskGroup._id,httpOptions)
             .then(function (data) {
                 //$scope.laliste = data.data;
                 console.log(data);
@@ -279,6 +361,7 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
             })
             .catch(function (data) {
                 console.log("Error:" + data);
+                console.log(data);
                 switch (data.status) {
                     case 403:
                         $scope.logout();

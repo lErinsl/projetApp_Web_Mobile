@@ -69,6 +69,25 @@ exports.routesConfigs = function (app, dataLayer, jwt) {
         });
     });
 
+    //get project
+    app.post("/getTasksGroup/partage", verifyToken, (req, res) => {
+
+        jwt.verify(req.token, 'secretkey', (err, authData) => {
+            if (err) {
+                res.sendStatus(403);
+            } else {
+
+                var filter = {
+                    listviewer: authData.users.nickname
+                };
+                dataLayer.get(listCollect, filter, function (dtSet) {
+                    res.send(dtSet);
+                });
+
+            }
+        });
+    });
+
     //delete project
     app.delete("/deleteTasksGroup/:elem_id",verifyToken, (req, res) => {
 
@@ -114,9 +133,6 @@ exports.routesConfigs = function (app, dataLayer, jwt) {
                 res.sendStatus(403);
             } else {
                 //res.sendStatus(200);
-
-                //console.log(authData.users._id)
-
                 // un utilisateur ne peu pas se partager une tache a lui même.
                 if (req.body.nicknameCreateur != req.body.nicknameOrEmail){
                     if (req.params.elem_id && req.body) {
@@ -216,16 +232,12 @@ exports.routesConfigs = function (app, dataLayer, jwt) {
 
                         var array = req.body.listviewer;
 
-                        console.log(array);
-
                         for (let i = 0; i < array.length; i++) {
                             if(array[i] == paramsNickname){
                                 array.splice(i,1);
                                 i = array.length;
                             }
                         }
-
-                        console.log(array);
 
                         var task = {
                             listviewer: array

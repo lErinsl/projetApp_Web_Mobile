@@ -10,7 +10,6 @@ TodoApp.controller('InscriptionController', function ($scope, $http) {
   $scope.formData = {};
 
   existEmailNickname = 0;
-  //$scope.idUser = GetCookie("idUser");
 
   if ($scope.idUser!=null) document.location.href="./index.html";
 
@@ -146,6 +145,7 @@ TodoApp.controller('InscriptionController', function ($scope, $http) {
       .then(function (data) {
         //$scope.formData = {};
         console.log(data);
+        document.location.href = "./connection.html";
       })
       .catch(function (data) {
         console.log("Error:" + data);
