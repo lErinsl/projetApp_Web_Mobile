@@ -1,4 +1,5 @@
 const usersCollect = "Users"
+var crypto = require('crypto');
 
 exports.usersConfigs = function (app, dataLayer) {
 
@@ -9,16 +10,31 @@ exports.usersConfigs = function (app, dataLayer) {
         if (req.body && typeof req.body.email != 'undefined'
         && typeof req.body.pass != 'undefined'
         && typeof req.body.nickname != 'undefined') {
+
+
+            var text = 'Le pire des salauds se nourrira vers deux heures du matin';
+
+            // On définit notre algorithme de cryptage
+            var algorithm = 'aes256';
+
+            // Notre clé de chiffrement, elle est souvent générée aléatoirement mais elle doit être la même pour le décryptage
+            var password = req.body.pass;
+
+            // On crypte notre texte
+            var cipher = crypto.createCipher(algorithm, password);
+            var crypted = cipher.update(text, 'utf8', 'hex');
+            crypted += cipher.final('hex');
+
             
             //on teste si un user exist ou non.
-            console.log(req.body);
-
+            
             var users = {
                 email : req.body.email,
                 nickname : req.body.nickname,
-                pass : req.body.pass
+                pass: crypted
             };
-
+            
+            console.log(users);
             dataLayer.insert(usersCollect, users, function () {
                 res.send({ success: true });
             });

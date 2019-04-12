@@ -32,8 +32,6 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
         }
     });
     
-
-    
     $scope.logout = function() {
         localStorageREMOVE('token');
         document.location.href = "./connection.html";
@@ -58,6 +56,11 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
             console.log($mdSidenav(componentId).toggle());
             refreshProjectPartage();
         };
+    }
+
+    $scope.cancelError = function () {
+        $scope.createError = 0;
+        $scope.partageError = 0;
     }
 
     var refreshGlobal = function () {
@@ -147,6 +150,11 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
     refreshProject = function () {
         $http.post('/getTasksGroup',{},httpOptions).then(function (data) {
             $scope.projectliste = data.data;
+            
+            if($scope.TasksGroupSelect == null || $scope.TasksGroupSelect.length<=0){
+                $scope.TasksGroupSelect = $scope.projectliste[0];
+            }
+
         }).catch(function (response) {
             console.error('Error', response);
             switch (response.status) {
@@ -275,6 +283,8 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
 
 //PARTAGE---------------------------------------------------------------------
     $scope.partageProject = function () {
+        $scope.createError = 0;
+        $scope.partageError = 0;
         $http.post('/partageProjet/' + $scope.TasksGroupSelect._id, $scope.TasksGroupSelect, httpOptions) // retourne la liste des viewvers de ce projet apres l'avoir partagée
             .then(function (data) {
                 console.log(data);
@@ -312,6 +322,8 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
     };
 
     $scope.partageProjectRemoveUser = function (nickname) {
+        $scope.createError = 0;
+        $scope.partageError = 0;
         $http.post('/partageProjet/remove/' + nickname, $scope.TasksGroupSelect, httpOptions) // retourne la liste des viewvers de ce projet apres l'avoir partagée
             .then(function (data) {
                 console.log(data);

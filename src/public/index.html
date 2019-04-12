@@ -151,7 +151,7 @@
                         <div layout="column" class="inputBarPartage">
                             <form>
                                 <div layout="row" layout-align="center center">
-                                    <input type="text" class="form-control" placeholder="Partager le projet avec un utilisateur" ng-model="TasksGroupSelect.nicknameOrEmail">
+                                    <input type="text" class="form-control" placeholder="Partager le projet avec un utilisateur" ng-model="TasksGroupSelect.nicknameOrEmail" ng-click="cancelError()">
                                     <md-button class="md-primary md-raised buttonBar" type="submit" ng-click="partageProject()">
                                         Partager
                                     </md-button>
@@ -203,7 +203,7 @@
                 <div id="todo-form" layout="column" class="inputBar" style="margin-top : 50px; margin-bottom : 30px;">
                     <form>
                         <div layout="row" layout-align="center center">
-                            <input type="text" class="form-control" placeholder="Ajouter une tâche..." ng-model="formData.name">
+                            <input type="text" class="form-control" placeholder="Ajouter une tâche..." ng-model="formData.name"  ng-click="cancelError()">
                             <md-button class="md-primary md-raised buttonBar" type="submit" ng-click="createTodo(TasksGroupSelect)">
                                 <span class="fas fa-plus"></span>
                                 Ajouter

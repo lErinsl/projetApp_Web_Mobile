@@ -1,3 +1,4 @@
+var crypto = require('crypto');
 const usersCollect = "Users"
 
 exports.authentificationConfigs = function (app, dataLayer, jwt) {
@@ -5,13 +6,26 @@ exports.authentificationConfigs = function (app, dataLayer, jwt) {
     //login
     app.post("/login/", function (req, res) {
 
+        var text = 'Le pire des salauds se nourrira vers deux heures du matin';
+
+        // On définit notre algorithme de cryptage
+        var algorithm = 'aes256';
+
+        // Notre clé de chiffrement, elle est souvent générée aléatoirement mais elle doit être la même pour le décryptage
+        var password = req.body.pass;
+
+        // On crypte notre texte
+        var cipher = crypto.createCipher(algorithm, password);
+        var crypted = cipher.update(text, 'utf8', 'hex');
+        crypted += cipher.final('hex');
+
         var filternickname = {
             "nickname": req.body.nicknameemail,
-            "pass" : req.body.pass
+            "pass": crypted
         };
         var filteremail = {
             "email": req.body.nicknameemail,
-            "pass": req.body.pass
+            "pass": crypted
         };
 
         //on test si on trouve le pseudo + pass dans la base de donnée

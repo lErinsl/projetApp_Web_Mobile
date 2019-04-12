@@ -27,56 +27,59 @@
 </head>
 
 <body ng-controller=InscriptionController layout="column">
+
+     <md-toolbar class="md-hue-2">
+          <div class="md-toolbar-tools">
      
+               <h2 flex md-truncate>ToDo Liste : Inscription</h2>
+
+               <md-button href="./connection.html" class="md-raised">Connection</md-button>
+          </div>
+     </md-toolbar>
+
     <md-content layout-padding>
-          <form name="inscriptionForm">
-               <md-input-container class="md-block">
-                    <label>Pseudo : </label>
-                    <input required name="nickname" ng-model="formData.nickname" minlength="3"/>
-                    inscriptionForm.nickname.$error = {{ inscriptionForm.nickname.$error | json }}
-                    <div ng-messages="inscriptionForm.nickname.$error" role="alert">
+          <form name="inscriptionForm" layout="column" style="width: 500px; margin: auto; margin-top: 50px;">
+               <div class="form-group" layout-align="center center">
+                    <label>*Pseudonyme : </label>
+                    <input class="form-control" name="nickname" ng-model="formData.nickname" placeholder="Pseudonyme"/>
+                    <!-- inscriptionForm.nickname.$error = {{ inscriptionForm.nickname.$error | json }} -->
+                    <div ng-messages="inscriptionForm.nickname.$error" style="color:red">
                          <div ng-message="required">Le pseudo est requis.</div>
                          <div ng-message="minlength">Le pseudonyme doit possèder au moins 3 caractères</div>
                          <div ng-message="exist">Ce pseudo est déjà utilisé</div>
                     </div>
-               </md-input-container>
 
-               <md-input-container class="md-block">
-                    <label>Email : </label>
-                    <input required type="email" name="email" ng-model="formData.email" minlength="3" ng-patterne="/^.+@.+\..+$/" />
-                    inscriptionForm.email.$error = {{ inscriptionForm.email.$error | json }}
-                    <div ng-messages="inscriptionForm.email.$error" role="alert">
+                    <label style="margin-top : 15px;">*Email : </label>
+                    <input class="form-control" type="email" name="email" ng-model="formData.email" ng-patterne="/^.+@.+\..+$/" placeholder="exemple@host.com"/>
+                    <!-- inscriptionForm.email.$error = {{ inscriptionForm.email.$error | json }} -->
+                    <div ng-messages="inscriptionForm.email.$error" style="color:red">
                          <div ng-message="required">l'adresse email est requis.</div>
                          <div ng-message="exist">Cette adresse email est déjà utilisée</div>
                          <div ng-message-exp="['required', 'minlength', 'pattern']">
-                              L'adresse email doit ressembler à une adresse e-mail.
+                              L'adresse email doit ressembler à une adresse e-mail. (exemple@host.com)
                          </div>
                     </div>
-               </md-input-container>
 
-               <md-input-container felx="50">
-                    <label>Mot de passe : </label>
-                    <input required name="pass" ng-model="formData.pass" minlength="8">
-                    inscriptionForm.pass.$error = {{ inscriptionForm.pass.$error | json }}
-                    <div ng-messages="inscriptionForm.pass.$error" role="alert">
+                    <label style="margin-top : 15px;">*Mot de passe : </label>
+                    <input class="form-control" type="password" name="pass" ng-model="formData.pass" placeholder="Mot de passe">
+                    <!-- inscriptionForm.pass.$error = {{ inscriptionForm.pass.$error | json }} -->
+                    <div ng-messages="inscriptionForm.pass.$error" style="color:red">
                          <div ng-message="required">Le mot de passe est requis.</div>
                          <div ng-message="minlength">Le nombre de caractère du mot de passe doit etre supérieur à 8</div>
                          <div ng-message="notsimilar">Le mot de passe et la confirmation doivent être identique.</div>
                     </div>
-               </md-input-container>
 
-               <md-input-container felx="50">
-                    <label>Confirmer le mot de passe : </label>
-                    <input required name="passconf" ng-model="formData.passconf">
-                    inscriptionForm.passconf.$error = {{ inscriptionForm.passconf.$error | json }}
-                    <div ng-messages="inscriptionForm.passconf.$error" role="alert">
+                    <label style="margin-top : 15px;">*Confirmer le mot de passe : </label>
+                    <input class="form-control" type="password" name="passconf" ng-model="formData.passconf" placeholder="Confirmer le mot de passe">
+                    <!-- inscriptionForm.passconf.$error = {{ inscriptionForm.passconf.$error | json }} -->
+                    <div ng-messages="inscriptionForm.passconf.$error" role="alert" style="color:red">
                          <div ng-message="required">La confirmation du mot de passe est requis.</div>
                          <div ng-message="notsimilar">Le mot de passe et la confirmation doivent être identique.</div>
                     </div>
-               </md-input-container>
+               </div>
 
                <md-button class="md-primary md-raised" type="submit" ng-click="sinscrire(inscriptionForm)">S'inscrire</md-button>
           </form>
-    </md-content>        
+    </md-content>
 </body>
 </html>

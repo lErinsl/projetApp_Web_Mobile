@@ -27,24 +27,27 @@
 
 <body ng-controller=ConnectionController>
 
-    <div class="container content ">
-        <div class="container col-sm-8 col-sm-offset-2">
-            <form name="connectionForm" class="form-group">
+    <md-toolbar class="md-hue-2">
+        <div class="md-toolbar-tools">
+            <h2 flex md-truncate>ToDo Liste : Connection</h2>
+        </div>
+    </md-toolbar>
+
+    <md-content layout-padding>
+            <form name="connectionForm" layout="column" style="width: 500px; margin: auto; margin-top: 50px;">
                 <div class="form-group">
                     <label>Pseudo ou email</label>
                     <input type="text" placeholder="NicknameEmail" ng-model="formData.nicknameemail" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label>Mot de passe</label>
+
+                    <label style="margin-top : 25px;">Mot de passe</label>
                     <input name="nickpass" type="password" placeholder="Mot de passe" ng-model="formData.pass" class="form-control">
+                    <div ng-messages="connectionForm.nickpass.$error" role="alert" style="color:red">
+                        <div ng-message="errone">L'identifiant ou le mot de passe est erroné !</div>
+                    </div>
                 </div>
-                <div ng-messages="connectionForm.nickpass.$error" role="alert">
-                    <div ng-message="errone">L'identifiant ou le mot de passe est erronné !</div>
-                </div>
-                <button type="submit" ng-click="connect(connectionForm)" class="btn btn-primary btn-lg btn-block">Se connecter</button>
+                <md-button type="submit" ng-click="connect(connectionForm)" class="md-primary md-raised">Se connecter</md-button>
+                <p style="margin: auto;">Vous n'avez pas encore de compte ?<a href="inscription.html"> S'inscrit maintenant !</a></p>
             </form>
-            <p>Vous n'avez pas encore de compte ?<a href="inscription.html"> S'inscrit maintenant !</a></p>
-        </div>        
-    </div>
+    </md-content>
 </body>
 </html>
