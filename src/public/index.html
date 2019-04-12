@@ -65,15 +65,36 @@
         
                 <md-content layout-margin>
                     <h5>Vos projets :</h5>
-                    <md-button ng-click="newProject()" class="md-raised">
-                        Ajouter un projet
-                    </md-button>
+                    <div layout="column" class="inputBar">
+                        <form>
+                            <div layout="row" layout-align="center center">
+                                <form>
+                                    <input type="text" class="form-control" placeholder="Ajouter un projet..." ng-model="formTaskGroup.name">
+                                    <md-button ng-click="newProject()" type="submit" class="md-primary md-raised buttonBar">
+                                        Ajouter
+                                    </md-button>
+                                </form>
+                            </div>
+                        </form>
+                    </div>
+                    
                     <div ng-repeat="project in projectliste">
-                        <md-button ng-click="selectProject(project)">
-                            {{project.name}}
-                        </md-button>
-                        <md-button class="md-icon-button" ng-click="deleteProject(project._id)" aria-label="Delete_Project">
-                            <ng-md-icon icon="delete_sweep" size="26"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48"
+                        <div ng-if="myvarGroup != project._id">
+                            <md-button ng-click="selectProject(project)">
+                                {{project.name}}
+                            </md-button>
+                            <md-button class="md-icon-button" ng-click="modifierProjet(project)" aria-label="modif_Task">
+                                <ng-md-icon icon="edit" size="30"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="30" height="30"
+                                        style="fill : #3F51B5">
+                                        <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z"></path>
+                                        <path
+                                            d="M20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z">
+                                        </path>
+                                    </svg>
+                                </ng-md-icon>
+                            </md-button>
+                            <md-button class="md-icon-button" ng-click="deleteProject(project._id)" aria-label="Delete_Project">
+                                <ng-md-icon icon="delete_sweep" size="26"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48"
                                     height="26" style="fill : #9E0000">
                                     <path d="M15 16h4v2h-4z"></path>
                                     <path d="M15 8h7v2h-7z"></path>
@@ -81,7 +102,30 @@
                                     <path d="M3 18c0 1.1.9 2 2 2h6c1.1 0 2-.9 2-2V8H3v10z"></path>
                                     <path d="M14 5h-3l-1-1H6L5 5H2v2h12z"></path>
                                 </svg></ng-md-icon>
-                        </md-button>
+                            </md-button>
+                        </div>
+                        <div ng-if="myvarGroup == project._id">
+                            <form>
+                                <input type="text" class="form-control" placeholder="Modifier la tâche..." ng-model="formTaskGroupModif.name">
+                                <md-button class="md-icon-button" type="submit" ng-click="modifProjet(project._id)"
+                                    aria-label="Valid modification">
+                                    <ng-md-icon icon="check" size="30">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="30" height="30" style="fill : #3F51B5">
+                                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path>
+                                        </svg>
+                                    </ng-md-icon>
+                                </md-button>
+                                <md-button class="md-icon-button" ng-click="annulerModificationProjet()" aria-label="Cancel modification">
+                                    <ng-md-icon icon="cancel" size="30">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="30" height="30">
+                                            <path
+                                                d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z">
+                                            </path>
+                                        </svg>
+                                    </ng-md-icon>
+                                </md-button>
+                            </form>
+                        </div>
                     </div>
 
                     <h5>Projets partagés avec vous :</h5>

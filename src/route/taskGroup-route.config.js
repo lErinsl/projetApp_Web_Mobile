@@ -88,6 +88,45 @@ exports.routesConfigs = function (app, dataLayer, jwt) {
         });
     });
 
+    //update project
+    app.post("/updateProject/:elem_id", verifyToken, (req, res) => {
+        jwt.verify(req.token, 'secretkey', (err, authData) => {
+            if (err) {
+                res.sendStatus(403);
+            } else {
+                //res.sendStatus(200);
+                if (req.params.elem_id && req.body && typeof req.body.name != 'undefined') {
+
+                    if (req.body.nicknameCreateur == authData.users.nickname) {
+                        console.log("update Project");
+                        var ID = req.params.elem_id;
+
+                        var project = {
+                            nicknameCreateur: req.body.nicknameCreateur,
+                            name: req.body.name,
+                            listviewer: req.body.listviewer
+                        };
+
+                        dataLayer.update(listCollect, ID, project, function () {
+                            res.send({ success: true });
+                        });
+                    } else {
+                        res.sendStatus(401);
+                    }
+
+                } else {
+
+                    res.send({
+                        success: false,
+                        errorCode: "PARAM_MISSING"
+                    });
+
+                }
+
+            }
+        });
+    });
+
     //delete project
     app.delete("/deleteTasksGroup/:elem_id",verifyToken, (req, res) => {
 

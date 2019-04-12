@@ -41,6 +41,7 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
 
     $scope.TasksGroupSelect = {};
     $scope.formTaskGroup = {};
+    $scope.formTaskGroupModif = {};
     $scope.formData = {};
     $scope.formDataModif = {};
 
@@ -48,6 +49,7 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
     $scope.projectliste = {};
 
     $scope.myvar = {};
+    $scope.myvarGroup = {};
 
 
     $scope.toggleLeft = buildToggler('left');
@@ -183,7 +185,9 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
 
     $scope.newProject = function () {
         console.log($scope.formTaskGroup);
-        $scope.formTaskGroup.name = "Project "+$scope.projectliste.length;
+        if ($scope.formTaskGroup.name == null || $scope.formTaskGroup.name.length <=0){
+            $scope.formTaskGroup.name = "Project "+$scope.projectliste.length;
+        }
 
         $http.post('/addTasksGroup', $scope.formTaskGroup,httpOptions)
             .then(function (data) {
@@ -217,6 +221,44 @@ ListeaFaire.controller('mainController', function ($scope, $http, $mdSidenav){
                 }else{
                     refreshProjectAll();
                 }
+            })
+            .catch(function (data) {
+                console.log("Error:" + data);
+                switch (data.status) {
+                    case 403:
+                        $scope.logout();
+                        break;
+
+                    default:
+                        break;
+                }
+            });
+    };
+
+    $scope.modifierProjet = function (elem) {
+        $scope.formTaskGroupModif.nicknameCreateur = elem.nicknameCreateur;
+        $scope.formTaskGroupModif.name = elem.name;
+        $scope.formTaskGroupModif.listviewer = elem.listviewer;
+        $scope.myvarGroup = elem._id;
+    }
+
+    $scope.annulerModificationProjet = function () {
+        $scope.formTaskGroupModif = {};
+        $scope.myvarGroup = {};
+    }
+
+    $scope.modifProjet = function (id) {
+        console.log($scope.formTaskGroupModif);
+
+        $http.post('/updateProject/' + id, $scope.formTaskGroupModif, httpOptions)
+            .then(function (data) {
+                $scope.formTaskGroupModif = {};
+                $scope.myvarGroup = {};
+                //$scope.laliste = data.data;
+                console.log(data);
+
+                //on réactualise les données
+                refreshGlobal();
             })
             .catch(function (data) {
                 console.log("Error:" + data);
