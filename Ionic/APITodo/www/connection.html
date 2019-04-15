@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html ng-app="TodoApp">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title>TODO Liste - Connection</title>
+    
+    <link rel="manifest" href="manifest.json">
+    
+    <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- ionic/angularjs js -->
+    <script src="lib/ionic/js/ionic.bundle.js"></script>
+
+    <!-- your app's js -->
+    <script src="js/connection.js"></script>
+    <script src="js/localStorage.service.js"></script>
+    <script src="cordova.js"></script>
+    
+</head>
+
+<body ng-app="TodoApp" ng-controller="ConnectionController">
+
+        <ion-header-bar class="bk_primary">
+            <div class="md-toolbar-tools">
+                <h2 class="color_primary">ToDo Liste : Connection</h2>
+            </div>
+        </ion-header-bar>
+    
+        <ion-content class="padding">
+            <form name="connectionForm" style="margin-top : 25px;">
+                <div class="list list-inset">
+                    <label class="item item-input">
+                        <input type="text" placeholder="Pseudo ou Email" ng-model="formData.nicknameemail" class="form-control">
+                    </label>
+                    <label class="item item-input">
+                        <input name="nickpass" type="password" placeholder="Mot de passe" ng-model="formData.pass" class="form-control">
+                    </label>
+
+                    <div ng-if='formData_nickpass_error == "errone"' style="color:red">L'identifiant ou le mot de passe est erroné !</div>
+                    
+                    <button class="button button-block bk_primary" ng-click="connect(connectionForm)" style="margin-top : 25px; color:white;">Se connecter
+                    </button>
+                    <p style="margin: auto;">Vous n'avez pas encore de compte ?<a href="inscription.html"> S'inscrit maintenant
+                        !</a></p>
+                </div>
+            </form>
+        </ion-content>
+
+</body>
+</html>

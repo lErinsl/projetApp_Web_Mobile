@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+  <title>TODO Liste</title>
+
+  <link rel="manifest" href="manifest.json">
+
+  <!-- un-comment this code to enable service worker
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('service-worker.js')
+          .then(() => console.log('service worker installed'))
+          .catch(err => console.log('Error', err));
+      }
+    </script>-->
+
+  <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
+    <link href="css/ionic.app.css" rel="stylesheet">
+    -->
+
+  <!-- ionic/angularjs js -->
+  <script src="lib/ionic/js/ionic.bundle.js"></script>
+
+
+  <!-- your app's js -->
+  <script src="js/index.js"></script>
+  <script src="js/localStorage.service.js"></script>
+  <script src="cordova.js"></script>
+
+</head>
+
+<body ng-app="starter" ng-controller="mainController">
+
+  <ion-side-menus>
+
+    <!-- Center content -->
+    <ion-side-menu-content>
+      <ion-header-bar class="bk_primary">
+        <button class="button button-icon color_primary" ng-click="toggleProjects()">
+          <i class="icon ion-navicon"></i>
+        </button>
+        <div style="margin-right: 160px;">
+          <h2 class="color_primary" flex md-truncate>ToDo Liste : {{TasksGroupSelect.name}} <small>[{{TasksGroupSelect.nicknameCreateur}}]</small>
+          </h2>
+        </div>
+          
+          <div class="color_primary" style="right:10px; position: absolute">
+            {{myself.nickname}}
+            <ion-button ng-click="logout()" color="light" class="button">
+              deconnection
+            </ion-button>
+          </div>
+
+      </ion-header-bar>
+
+      <ion-content scroll="true" style="margin-top : 45px;">
+
+          <!-- Ajout Partage -->
+          <div layout="row" layout-align="end" ng-if="myself.nickname == TasksGroupSelect.nicknameCreateur">
+            <div layout="column" class="inputBarPartage">
+              <form class="formdefault">
+                <div layout="row" layout-align="center center">
+                  <label class="item item-input">
+                    <input type="text" class="form-control" placeholder="Partager le projet avec un utilisateur"
+                      ng-model="TasksGroupSelect.nicknameOrEmail" ng-click="cancelError()">
+                  </label>
+                  <button class="button button-block bk_primary color_primary" ng-click="partageProject()" type="submit">
+                    Partager
+                  </button>
+                </div>
+                <div layout="row">
+                  <div ng-if="partageError == 400 || partageError == 304" class="alert alert-warning" role="alert">
+                    {{msgPartageError}}
+                  </div>
+                  <div ng-if="partageError == 401" class="alert alert-danger" role="alert">
+                    {{msgPartageError}}
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        
+          <!-- List Partage -->
+          <div layout="row" layout-align="end" style="margin : 5px">
+            <div layout="column" class="inputBarPartage" style="display: flex;">
+              <div layout="column"> Partagé avec :</div>
+              <div ng-if="myself.nickname != TasksGroupSelect.nicknameCreateur" class="ovale listepartage">
+                <span class="margin">{{TasksGroupSelect.nicknameCreateur}}</span>
+              </div>
+            <div ng-repeat="nickname in TasksGroupSelect.listviewer">
+              <div class="ovale listepartage">
+                <span class="margin">{{nickname}}<span ng-if="nickname == myself.nickname"> (Vous)</span></span>
+                <span ng-if="myself.nickname == TasksGroupSelect.nicknameCreateur">
+
+                  <md-button class="md-icon-button partage_bt_icon" ng-click="partageProjectRemoveUser(nickname,TasksGroupSelect)"
+                    aria-label="Remove_user_from_project">
+                    <ng-md-icon icon="edit" size="30"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="30" height="30"
+                        style="fill : #000">
+                        <path
+                          d="M19 6.41l-1.41-1.41-5.59 5.59-5.59-5.59-1.41 1.41 5.59 5.59-5.59 5.59 1.41 1.41 5.59-5.59 5.59 5.59 1.41-1.41-5.59-5.59z">
+                        </path>
+                      </svg>
+                    </ng-md-icon>
+                  </md-button>
+
+                </span>
+              </div>
+            </div>
+            </div>
+          </div>
+
+          <!-- Ajout Task -->
+          <div id="todo-form" layout="column" class="inputBar" style="margin-top : 50px; margin-bottom : 30px;">
+            <form>
+              <div layout="row" layout-align="center center">
+                <label class="item item-input">
+                  <input type="text" class="form-control" placeholder="Ajouter une tâche..." ng-model="formData.name"
+                    ng-click="cancelError()">
+                </label>
+                <button class="button button-block bk_primary color_primary" type="submit" ng-click="createTodo(TasksGroupSelect)">
+                  <span class="fas fa-plus"></span>
+                  Ajouter
+                </button>
+              </div>
+              <div ng-if="createError == 401" class="alert alert-danger" role="alert">
+                {{msgCreateError}}
+              </div>
+            </form>
+          </div>
+
+          <!-- Content Task -->
+          <div layout="column" layout-align="top center">
+
+            <br /> Nombre de task: {{ laliste.length }}
+            <div id="todo-list">
+
+              <table class="table">
+                <thead>
+                  <th scope="col">#</th>
+                  <th scope="col">Tâche</th>
+                  <th scope="col">Createur</th>
+                  <th scope="col"></th>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="x in laliste">
+                    <td>
+                        <ion-checkbox ng-click="changeCheck(x)" ng-checked="x.done" aria-label="ShowHideAccountant">
+                        </ion-checkbox>
+                    </td>
+                    <td ng-click="changeCheck(x)" ng-if="myvar != x._id"
+                      ng-style="{ 'text-decoration' : (x.done == false) ? 'blink' : 'line-through' }">
+                      {{ x.name }}
+                    </td>
+                    <td ng-if="myvar == x._id">
+                      <label class="item item-input">
+                        <input type="text" class="form-control" placeholder="Modifier la tâche..." ng-model="formDataModif.name">
+                      </label>
+                    </td>
+                    <td ng-click="changeCheck(x)" ng-style="{ 'text-decoration' : (x.done == false) ? 'blink' : 'line-through' }">
+                      {{ x.nicknameCreateur }}
+                    </td>
+                    <td ng-if="myvar != x._id">
+                      <md-button class="md-icon-button" ng-click="modifier(x)" aria-label="modif_Task">
+                        <ng-md-icon icon="edit" size="30"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="30"
+                            height="30" style="fill : #3F51B5">
+                            <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z"></path>
+                            <path
+                              d="M20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z">
+                            </path>
+                          </svg>
+                        </ng-md-icon>
+                      </md-button>
+                      <md-button style="margin-left: 15px;" class="md-icon-button" ng-click="deleteTodo(x._id,TasksGroupSelect)" aria-label="delete_Task">
+                        <ng-md-icon icon="delete_sweep" size="30">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="30" height="30"
+                            style="fill : #9E0000">
+                            <path d="M3 18c0 1.1.9 2 2 2h6c1.1 0 2-.9 2-2V8H3v10z"></path>
+                            <path d="M14 5h-3l-1-1H6L5 5H2v2h12z"></path>
+                          </svg>
+                        </ng-md-icon>
+                      </md-button>
+                    </td>
+                    <td ng-if="myvar == x._id">
+                      <md-button class="md-icon-button" type="submit" ng-click="modifTodo(x._id,TasksGroupSelect)"
+                        aria-label="Valid modification">
+                        <ng-md-icon icon="check" size="30">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="30" height="30"
+                            style="fill : #3F51B5">
+                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path>
+                          </svg>
+                        </ng-md-icon>
+                      </md-button>
+                      <md-button style="margin-left: 15px;" class="md-icon-button" ng-click="annulerModification()" aria-label="Cancel modification">
+                        <ng-md-icon icon="cancel" size="30">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="30" height="30">
+                            <path
+                              d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z">
+                            </path>
+                          </svg>
+                        </ng-md-icon>
+                      </md-button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+
+      </ion-content>
+    </ion-side-menu-content>
+
+    <!-- Left menu -->
+    <ion-side-menu side="left">
+      <ion-header-bar class="bk_primary" >
+        <h1 class="title color_primary">Liste des projets</h1>
+        <button class="button button-icon ion-plus color_primary" ng-click="newProject()">
+        </button>
+      </ion-header-bar>
+      <ion-content scroll="false" style="margin: 45px 10px;">
+        <h5>Vos projets :</h5>
+          <form class="formmenu">
+            <label class="item item-input">
+              <input type="text" class="form-control" placeholder="Ajouter un projet..." ng-model="formTaskGroup.name">
+            </label>
+            <button ng-click="newProject()" type="submit" class="button button-block bk_primary color_primary">
+              Ajouter
+            </button>
+          </form>
+        </ion-item>
+        <ion-list>
+          <ion-item ng-repeat="project in projectliste" ng-click="selectProject(project)"
+            ng-class="{active: TasksGroupSelect._id == project._id}" style="padding-left:20px;">
+            <div ng-if="myvarGroup != project._id">
+              {{project.name}}
+
+              <md-button class="md-icon-button" ng-click="modifierProjet(project)" aria-label="modif_Task">
+                <ng-md-icon icon="edit" size="30"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="30" height="30"
+                    style="fill : #3F51B5">
+                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z"></path>
+                    <path d="M20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z">
+                    </path>
+                  </svg>
+                </ng-md-icon>
+              </md-button>
+
+              <md-button ng-click="deleteProject(project._id)" aria-label="Delete_Project" class="button-icon">
+                <ng-md-icon icon="delete_sweep" size="26"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48"
+                    height="26" style="fill : #9E0000">
+                    <path d="M15 16h4v2h-4z"></path>
+                    <path d="M15 8h7v2h-7z"></path>
+                    <path d="M15 12h6v2h-6z"></path>
+                    <path d="M3 18c0 1.1.9 2 2 2h6c1.1 0 2-.9 2-2V8H3v10z"></path>
+                    <path d="M14 5h-3l-1-1H6L5 5H2v2h12z"></path>
+                  </svg></ng-md-icon>
+              </md-button>
+            </div>
+
+            <div ng-if="myvarGroup == project._id">
+              <form class="formmenu">
+                <label class="item item-input">
+                  <input type="text" class="form-control" placeholder="Modifier la tâche..." ng-model="formTaskGroupModif.name">
+                </label>
+                <md-button class="md-icon-button" type="submit" ng-click="modifProjet(project._id)" aria-label="Valid modification">
+                  <ng-md-icon icon="check" size="30">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="30" height="30" style="fill : #3F51B5">
+                      <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path>
+                    </svg>
+                  </ng-md-icon>
+                </md-button>
+                <md-button class="md-icon-button" ng-click="annulerModificationProjet()" aria-label="Cancel modification">
+                  <ng-md-icon icon="cancel" size="30">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="30" height="30">
+                      <path
+                        d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z">
+                      </path>
+                    </svg>
+                  </ng-md-icon>
+                </md-button>
+              </form>
+            </div>
+
+          </ion-item>
+        </ion-list>
+
+        <h5 style="margin-top : 15px;">Projets partagés avec vous :</h5>
+        <ion-list>
+          <ion-item ng-repeat="project in projectPartageliste" ng-click="selectProject(project)"
+            ng-class="{active: activeProject == project}">
+            {{project.name}} [{{project.nicknameCreateur}}]
+
+            <md-button class="md-icon-button" ng-click="partageProjectRemoveUser(myself.nickname,project)"
+              aria-label="Remove_you_from_project">
+              <ng-md-icon icon="cancel" size="26"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="26" height="26"
+                  style="fill : #680000">
+                  <path
+                    d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z">
+                  </path>
+                </svg>
+              </ng-md-icon>
+            </md-button>
+
+          </ion-item>
+        </ion-list>
+      </ion-content>
+    </ion-side-menu>
+
+  </ion-side-menus>
+
+</body>
+
+</html>
