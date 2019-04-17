@@ -14,6 +14,7 @@
     "gulp-sass": "^3.1.0"
   },
   "dependencies": {
+    "@ionic/v1-toolkit": "1.0.22",
     "@angular/animations": "^7.2.13",
     "@angular/cdk": "^7.3.7",
     "@angular/material": "^7.3.7",
@@ -39,7 +40,7 @@
     ]
   },
   "scripts": {
-    "start": "ionic serve"
+    "start": "ionic serve --port $PORT --nobrowser --nolivereload --noopen"
   },
   "author": "",
   "license": "ISC",
