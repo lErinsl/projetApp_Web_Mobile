@@ -1,10 +1,10 @@
 angular.module('TodoApp', ['ionic'])
 .controller('InscriptionController', function ($scope, $http) {
 
-  form_nickname_error = "";
-  form_email_error = "";
-  form_pass_error = "";
-  form_passconf_error = "";
+  $scope.form_nickname_error = "";
+  $scope.form_email_error = "";
+  $scope.form_pass_error = "";
+  $scope.form_passconf_error = "";
 
   if (isConnect($http) == true) {
     document.location.href = "./index.html";
@@ -21,53 +21,61 @@ angular.module('TodoApp', ['ionic'])
     checkFormAndCreateUser();
   };
 
+  $scope.liensConnection = function () {
+    document.location.href = "./connection.html";
+  };
+
   checkForm = function(){
     result = true;
 
     //pseudo
-    if ($scope.formData.nickname == null || $scope.formData.nickname.length<3){
-      form_nickname_error = "minlength";
+    if ($scope.formData.nickname == null){
+      $scope.form_nickname_error = "required";
       result = false;
-    }
-    else{
-      form_nickname_error = "";
+    }else{
+      if ($scope.formData.nickname.length < 3){
+        $scope.form_nickname_error = "minlength";
+        result = false;
+      }else{
+        $scope.form_nickname_error = "";
+      }
     }
     
     var regex = new RegExp('^.+@.+\..+$')
     if ($scope.formData.email==null || $scope.formData.email.length<3){
-      form_email_error = "required";
+      $scope.form_email_error = "required";
       result = false;
     }else{
-      form_email_error = "";
+      $scope.form_email_error = "";
       if(regex.test($scope.formData.email)){
-        form_email_error = "";
+        $scope.form_email_error = "";
       }else{
-        form_email_error = "pattern";
+        $scope.form_email_error = "pattern";
         result = false;
       }
     }
 
     //password
     if ($scope.formData.pass==null || $scope.formData.pass.length<8){
-      form_pass_error = "minlength";
+      $scope.form_pass_error = "minlength";
       result = false;
     }else{
-      form_pass_error = "";
+      $scope.form_pass_error = "";
     }
     
     //confirm password
     if($scope.formData.passconf == null){
-      form_passconf_error = "required";
+      $scope.form_passconf_error = "";
       result = false;
     }else{
-      form_passconf_error = "";
+      $scope.form_passconf_error = "required";
       if ($scope.formData.pass != $scope.formData.passconf){
-        form_pass_error = "notsimilar";
-        form_passconf_error = "notsimilar";
+        $scope.form_pass_error = "notsimilar";
+        $scope.form_passconf_error = "notsimilar";
         result = false;
       }else{
-        form_pass_error = "";
-        form_passconf_error = "";
+        $scope.form_pass_error = "";
+        $scope.form_passconf_error = "";
       }
     }
 
@@ -80,18 +88,23 @@ angular.module('TodoApp', ['ionic'])
   }
 
   existEmail = function (result) {
+    if ($scope.formData.email){
+      $scope.form_email_error = "required";
+    }
     $http.get('/existemail/' + $scope.formData.email)
       .success(function (data) {
         console.log('existEmail');
         if (data.data == true) {
-          form_email_error = "exist";
+          $scope.form_email_error = "";
           result= false;
         } else {
-          form_email_error = "";
+          if ($scope.form_email_error != "required"){
+            $scope.form_email_error = "exist";
+          }
         }
       })
       .error(function (data) {
-        console.log('Error: ' + data);
+        //console.log('Error: ' + data);
         result = false;
       })
       .finally(function () {
@@ -105,15 +118,12 @@ angular.module('TodoApp', ['ionic'])
   };
 
   existNickname = function (result) {
-    result;
     $http.get('/existnickname/' + $scope.formData.nickname)
       .success(function (data) {
         console.log('existNickname');
         if (data.data == true) {
-          form_nickname_error = "exist";
+          $scope.form_nickname_error = "exist";
           result = false;
-        } else {
-          form_nickname_error = "";
         }
       })
       .error(function (data) {
