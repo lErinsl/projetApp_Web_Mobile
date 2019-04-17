@@ -39,9 +39,6 @@
       "browser"
     ]
   },
-  "scripts": {
-    "start": "ionic serve --port $PORT --nobrowser --nolivereload --noopen"
-  },
   "author": "",
   "license": "ISC",
   "repository": {
