@@ -1,8 +1,12 @@
 {
-  "name": "connection_mlab_datalayer",
+  "name": "API_appWebMobile",
   "version": "1.0.0",
   "description": "utilise la connection sur un serveur mlab et la méthode des datasets",
   "main": "app.js",
+  "engines":{
+    "node": "10.13.0",
+    "npm": "6.4.1"
+  },
   "dependencies": {
     "express": "^4.16.4",
     "jsonwebtoken": "^8.5.1",
