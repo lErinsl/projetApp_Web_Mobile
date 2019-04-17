@@ -1,7 +1,7 @@
 {
   "name": "connection_mlab_datalayer",
   "version": "1.0.0",
-  "description": "",
+  "description": "utilise la connection sur un serveur mlab et la méthode des datasets",
   "main": "app.js",
   "dependencies": {
     "express": "^4.16.4",
@@ -11,8 +11,17 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lErinsl/projetApp_Web_Mobile.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lErinsl/projetApp_Web_Mobile/issues"
+  },
+  "homepage": "https://github.com/lErinsl/projetApp_Web_Mobile#readme"
 }
