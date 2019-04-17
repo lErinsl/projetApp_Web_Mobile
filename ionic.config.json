@@ -13,67 +13,67 @@
   "proxies": [
     {
       "path": "/login",
-      "proxyUrl": "http://localhost:3000/login"
+      "proxyUrl": "https://app-web-mobile-api.herokuapp.com/login"
     },
     {
       "path": "/existemail",
-      "proxyUrl": "http://localhost:3000/existemail"
+      "proxyUrl": "https://app-web-mobile-api.herokuapp.com/existemail"
     },
     {
       "path": "/existnickname",
-      "proxyUrl": "http://localhost:3000/existnickname"
+      "proxyUrl": "https://app-web-mobile-api.herokuapp.com/existnickname"
     },
     {
       "path": "/adduser",
-      "proxyUrl": "http://localhost:3000/adduser"
+      "proxyUrl": "https://app-web-mobile-api.herokuapp.com/adduser"
     },
     {
       "path": "/getMyself",
-      "proxyUrl": "http://localhost:3000/getMyself"
+      "proxyUrl": "https://app-web-mobile-api.herokuapp.com/getMyself"
     },
     {
       "path": "/getTasksGroup",
-      "proxyUrl": "http://localhost:3000/getTasksGroup"
+      "proxyUrl": "https://app-web-mobile-api.herokuapp.com/getTasksGroup"
     },
     {
       "path": "/getTasksGroup/partage",
-      "proxyUrl": "http://localhost:3000/getTasksGroup/partage"
+      "proxyUrl": "https://app-web-mobile-api.herokuapp.com/getTasksGroup/partage"
     },
     {
       "path": "/addTasksGroup",
-      "proxyUrl": "http://localhost:3000/addTasksGroup"
+      "proxyUrl": "https://app-web-mobile-api.herokuapp.com/addTasksGroup"
     },
     {
       "path": "/deleteTasksGroup",
-      "proxyUrl": "http://localhost:3000/deleteTasksGroup"
+      "proxyUrl": "https://app-web-mobile-api.herokuapp.com/deleteTasksGroup"
     },
     {
       "path": "/updateProject",
-      "proxyUrl": "http://localhost:3000/updateProject"
+      "proxyUrl": "https://app-web-mobile-api.herokuapp.com/updateProject"
     },
     {
       "path": "/partageProjet",
-      "proxyUrl": "http://localhost:3000/partageProjet"
+      "proxyUrl": "https://app-web-mobile-api.herokuapp.com/partageProjet"
     },
     {
       "path": "/partageProjet/remove",
-      "proxyUrl": "http://localhost:3000/partageProjet/remove"
+      "proxyUrl": "https://app-web-mobile-api.herokuapp.com/partageProjet/remove"
     },
     {
       "path": "/getTaskSet",
-      "proxyUrl": "http://localhost:3000/getTaskSet"
+      "proxyUrl": "https://app-web-mobile-api.herokuapp.com/getTaskSet"
     },
     {
       "path": "/addTask",
-      "proxyUrl": "http://localhost:3000/addTask"
+      "proxyUrl": "https://app-web-mobile-api.herokuapp.com/addTask"
     },
     {
       "path": "/deleteTaskSet",
-      "proxyUrl": "http://localhost:3000/deleteTaskSet"
+      "proxyUrl": "https://app-web-mobile-api.herokuapp.com/deleteTaskSet"
     },
     {
       "path": "/updateTaskSet",
-      "proxyUrl": "http://localhost:3000/updateTaskSet"
+      "proxyUrl": "https://app-web-mobile-api.herokuapp.com/updateTaskSet"
     }
   ]
 }
