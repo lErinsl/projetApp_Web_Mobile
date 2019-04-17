@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
      <meta charset="utf-8">
      <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
@@ -26,7 +27,12 @@
           <div>
                <h2 class="color_primary">ToDo Liste : Inscription</h2>
           </div>
-          <a href="./connection.html">Connection</a>
+
+          <div class="color_primary" style="right:10px; position: absolute">
+               <ion-button ng-click="liensConnection()" color="light" class="button">
+                    Connection
+               </ion-button>
+          </div>
      </ion-header-bar>
 
 
@@ -37,45 +43,55 @@
                     <label>*Pseudonyme : </label>
 
                     <label class="item item-input">
-                         <input class="form-control" type="text" name="nickname" ng-model="formData.nickname" placeholder="Pseudonyme" />
+                         <input class="form-control" type="text" name="nickname" ng-model="formData.nickname"
+                              placeholder="Pseudonyme" />
                     </label>
-                         <div style="color:red" ng-if='form_nickname_error == "required"'>Le pseudo est requis.</div>
-                         <div style="color:red" ng-if='form_nickname_error == "minlength"'>Le pseudonyme doit possèder au moins 3 caractères
-                         </div>
-                         <div style="color:red" ng-if='form_nickname_error == "exist"'>Ce pseudo est déjà utilisé</div>
+                    <div style="color:red" ng-if='form_nickname_error == "required"'>Le pseudo est requis.</div>
+                    <div style="color:red" ng-if='form_nickname_error == "minlength"'>Le pseudonyme doit possèder au
+                         moins 3 caractères
+                    </div>
+                    <div style="color:red" ng-if='form_nickname_error == "exist"'>Ce pseudo est déjà utilisé</div>
 
                     <label style="margin-top : 15px;">*Email : </label>
                     <label class="item item-input">
-                         <input class="form-control" type="email" name="email" ng-model="formData.email" ng-patterne="/^.+@.+\..+$/"
-                              placeholder="Email : exemple@host.com" />
+                         <input class="form-control" type="email" name="email" ng-model="formData.email"
+                              ng-patterne="/^.+@.+\..+$/" placeholder="Email : exemple@host.com" />
                     </label>
-                         <div style="color:red" ng-if='form_email_error == "required"'>l'adresse email est requis.</div>
-                         <div style="color:red" ng-if='form_email_error == "exist"'>Cette adresse email est déjà utilisée</div>
-                         <div style="color:red" ng-if='form_email_error == "minlength" || form_email_error == "pattern"'>
-                              L'adresse email doit ressembler à une adresse e-mail. (exemple@host.com)
-                         </div>
+                    <div style="color:red" ng-if='form_email_error == "required"'>l'adresse email est requis.</div>
+                    <div style="color:red" ng-if='form_email_error == "exist"'>Cette adresse email est déjà utilisée
+                    </div>
+                    <div style="color:red" ng-if='form_email_error == "minlength" || form_email_error == "pattern"'>
+                         L'adresse email doit ressembler à une adresse e-mail. (exemple@host.com)
+                    </div>
 
                     <label style="margin-top : 15px;">*Mot de passe : </label>
                     <label class="item item-input">
-                         <input class="form-control" type="password" name="pass" ng-model="formData.pass" placeholder="Mot de passe">
+                         <input class="form-control" type="password" name="pass" ng-model="formData.pass"
+                              placeholder="Mot de passe">
                     </label>
-                         <div style="color:red" ng-if='form_pass_error == "required"'>Le mot de passe est requis.</div>
-                         <div style="color:red" ng-if='form_pass_error == "minlength"'>Le nombre de caractère du mot de passe doit etre
-                              supérieur à 8</div>
-                         <div style="color:red" ng-if='form_pass_error == "notsimilar"'>Le mot de passe et la confirmation doivent être
-                              identique.</div>
+                    <div style="color:red" ng-if='form_pass_error == "required"'>Le mot de passe est requis.</div>
+                    <div style="color:red" ng-if='form_pass_error == "minlength"'>Le nombre de caractère du mot de passe
+                         doit etre
+                         supérieur à 8</div>
+                    <div style="color:red" ng-if='form_pass_error == "notsimilar"'>Le mot de passe et la confirmation
+                         doivent être
+                         identique.</div>
 
                     <label style="margin-top : 15px;">*Confirmer le mot de passe : </label>
                     <label class="item item-input">
                          <input class="form-control" type="password" name="passconf" ng-model="formData.passconf"
                               placeholder="Confirmer le mot de passe">
                     </label>
-                         <div style="color:red" ng-if='form_passconf_error == "required"'>La confirmation du mot de passe est requis.</div>
-                         <div style="color:red" ng-if='form_passconf_error == "notsimilar"'>Le mot de passe et la confirmation doivent être
-                              identique.</div>
-                    <button class="button button-block bk_primary" style="margin-top: 15px; color: white;" type="submit" ng-click="sinscrire()">S'inscrire</button>
+                    <div style="color:red" ng-if='form_passconf_error == "required"'>La confirmation du mot de passe est
+                         requis.</div>
+                    <div style="color:red" ng-if='form_passconf_error == "notsimilar"'>Le mot de passe et la
+                         confirmation doivent être
+                         identique.</div>
+                    <button class="button button-block bk_primary" style="margin-top: 15px; color: white;" type="submit"
+                         ng-click="sinscrire()">S'inscrire</button>
                </div>
           </form>
      </ion-content>
 </body>
+
 </html>
