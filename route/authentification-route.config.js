@@ -47,7 +47,7 @@ exports.authentificationConfigs = function (app, dataLayer, jwt) {
                             pass: dtSet2[0].pass
                         };
 
-                        jwt.sign({ users }, 'secretkey', {expiresIn: '3600s'}, (err, token) =>{
+                        jwt.sign({ users }, 'secretkey', {expiresIn: '7200s'}, (err, token) =>{
                             res.json({
                                 token
                             });
@@ -61,7 +61,7 @@ exports.authentificationConfigs = function (app, dataLayer, jwt) {
                     nickname: dtSet[0].nickname,
                     pass: dtSet[0].pass
                 };
-                jwt.sign({ users }, 'secretkey', { expiresIn: '1800s' }, (err, token) => {
+                jwt.sign({ users }, 'secretkey', { expiresIn: '7200s' }, (err, token) => {
                     res.json({
                         token
                     });
